@@ -6,6 +6,7 @@ import carimg from '../../resources/Car.png'
 import featuredsample from '../../resources/featuredsample.jpg'
 import OctiIcons from 'react-native-vector-icons/Octicons'
 import IonIcons from 'react-native-vector-icons/Ionicons'
+import FeedIndvUpdate from '../partialcomponents/FeedIndvUpdate'
 
 const Feed = ({navigation}) => {
 
@@ -14,7 +15,7 @@ const Feed = ({navigation}) => {
   return (
     <View style={{flex: 1, backgroundColor: "#2B4273", justifyContent: "flex-start", alignItems: "center", flexDirection: "column"}}>
       <ScrollView style={{width: "100%"}} contentContainerStyle={{flexGrow: 1}}>
-        <View style={{backgroundColor: "transparent", width: "100%", height: 220, alignItems: "center"}}>
+        <View style={{backgroundColor: "transparent", width: "100%", height: 180, alignItems: "center"}}>
             <View style={{backgroundColor: "transparent", width: "100%", height: 60, flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between"}}>
                 <View style={{backgroundColor: "transparent", flexDirection: "column", paddingLeft: 20, paddingRight: 20}}>
                     <Text style={{color: "white", fontSize: 17, fontWeight: "bold"}}>Bus Track</Text>
@@ -32,9 +33,9 @@ const Feed = ({navigation}) => {
             <Image source={citylayout} style={{width: "100%", height: 160, maxWidth: 385}} />
         </View>
         <Image source={carimg} style={styles.carimgstyle} />
-        <View style={{flex: 1, backgroundColor: "white", width: '100%', alignItems: "center", borderTopLeftRadius: 25, borderTopRightRadius: 25, paddingTop: 45, paddingBottom: 100}}>
+        <View style={{flex: 1, backgroundColor: "white", width: '100%', alignItems: "center", borderTopLeftRadius: 15, borderTopRightRadius: 15, paddingTop: 45, paddingBottom: 100}}>
             <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 20, paddingRight: 20, justifyContent: "center", alignItems: "center"}}>
-                <TouchableOpacity style={{width: "100%", maxWidth: 500, borderRadius: 10, backgroundColor: "black", borderRadius: 10}}>
+                <TouchableOpacity onPress={() => { navigation.navigate("FeedInfo", { feedID: 1 }) }} style={{width: "100%", maxWidth: 500, borderRadius: 10, backgroundColor: "black", borderRadius: 10}}>
                     <ImageBackground source={featuredsample} style={{width: "100%", height: 220, maxWidth: 500, flexDirection: "column"}} imageStyle={{borderRadius: 10, opacity: 0.7}}>
                         <View style={{width: "100%", backgroundColor: "transparent", height: "50%"}}>
                             <Text style={{color: "white", backgroundColor: "#294172", width: 70, height: 20, textAlignVertical: "center", textAlign: 'center', marginTop: 10, marginLeft: 10, borderRadius: 10, fontSize: 12}}>Featured</Text>
@@ -49,6 +50,15 @@ const Feed = ({navigation}) => {
                     </ImageBackground>
                 </TouchableOpacity>
             </View>
+            <View style={{backgroundColor: "transparent", paddingTop: 15, paddingBottom: 15, width: "100%", paddingLeft: 20, paddingRight: 20, justifyContent: "center", alignItems: "center"}}>
+                <Text style={{fontSize: 17, maxWidth: 500, color: "#2C2C2C", width: "100%", fontWeight: "bold", marginBottom: 10}}>Recommend</Text>
+                <TouchableOpacity onPress={() => { navigation.navigate("FeedInfo", { feedID: 2 }) }} style={{width: "100%", maxWidth: 500, borderRadius: 10, backgroundColor: "black", borderRadius: 10, marginBottom: 10}}>
+                    <FeedIndvUpdate />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { navigation.navigate("FeedInfo", { feedID: 3 }) }} style={{width: "100%", maxWidth: 500, borderRadius: 10, backgroundColor: "black", borderRadius: 10}}>
+                    <FeedIndvUpdate />
+                </TouchableOpacity>
+            </View>
         </View>
       </ScrollView>
     </View>
@@ -61,7 +71,7 @@ const styles = StyleSheet.create({
         zIndex: 1,
         width: 195,
         height: 195,
-        top: 115,
+        top: 75,
         left: 10
       }
 })
