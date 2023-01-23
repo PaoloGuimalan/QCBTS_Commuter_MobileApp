@@ -9,6 +9,7 @@ import { SET_AUTH_DETAILS } from '../../redux/types/types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Axios from 'axios'
 import { URL } from '../../json/urlconfig'
+import MainHome from '../maincomponents/MainHome'
 
 const AuthStack = createNativeStackNavigator()
 
@@ -64,7 +65,7 @@ const Auth = () => {
 
   return (
     <AuthStack.Navigator>
-        <AuthStack.Screen name='Home' component={authdetails.auth != null? authdetails.auth? Home : Login : Loading} options={{headerShown: false}} />
+        <AuthStack.Screen name='Home' component={authdetails.auth != null? authdetails.auth? MainHome : Login : Loading} options={{headerShown: false}} />
     </AuthStack.Navigator>
   )
 }
