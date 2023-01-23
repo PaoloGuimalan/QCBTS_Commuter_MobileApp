@@ -34,71 +34,23 @@ import { Provider } from 'react-redux';
 import store from './src/redux/store/store';
 import Axios from 'axios'
 import Home from './src/components/maincomponents/Home';
+import Register from './src/components/authcomponents/Register'
 import Loading from './src/components/authcomponents/Loading';
 import { URL } from './src/json/urlconfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Auth from './src/components/authcomponents/Auth';
 
 const MainStack = createNativeStackNavigator();
 
 const App: () => Node = () => {
-
-  const [authdetails, setauthdetails] = useState({
-      auth: null,
-      userID: null,
-      username: ""
-  })
-
-  useEffect(() => {
-    authConnection()
-  },[])
-
-  const authConnection = async () => {
-    await AsyncStorage.getItem('token').then((resp) => {
-      if(resp == null){
-        setauthdetails({
-            auth: false,
-            userID: null,
-            username: ""
-        })
-      }
-      else{
-        Axios.get(`${URL}/auth/commuter/jwtchecker`, {
-          headers:{
-            "x-access-token": resp
-          }
-        }).then((response) => {
-          if(response.data.status){
-            setauthdetails({
-              auth: true,
-              userID: response.data.authdetails.userID,
-              username: response.data.authdetails.username
-            })
-          }
-          else{
-            setauthdetails({
-                auth: false,
-                userID: null,
-                username: ""
-            })
-          }
-        }).catch((err) => {
-          setauthdetails({
-              auth: false,
-              userID: null,
-              username: ""
-          })
-          console.log(err)
-        })
-      }
-    })
-  }
   
   return (
     <Provider store={store}>
       <NavigationContainer>
         <StatusBar hidden={true} backgroundColor="white" barStyle="dark-content" />
         <MainStack.Navigator>
-          <MainStack.Screen name='Home' component={authdetails.auth != null? authdetails.auth? Home : Login : Loading} options={{headerShown: false}} />
+          <MainStack.Screen name='Auth' component={Auth} options={{headerShown: false}} />
+          <MainStack.Screen name='Register' component={Register} options={{headerShown: false, animation: "slide_from_bottom"}} />
         </MainStack.Navigator>
       </NavigationContainer>
     </Provider>

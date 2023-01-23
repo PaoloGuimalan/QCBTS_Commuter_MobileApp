@@ -1,30 +1,65 @@
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView, Platform, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import citylayout from '../../resources/citylayout.png'
 import carimg from '../../resources/Car.png'
 import Axios from 'axios'
 import { URL } from '../../json/urlconfig'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
+import { useDispatch } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { SET_AUTH_DETAILS } from '../../redux/types/types'
 
-const Login = () => {
+const Login = ({navigation}) => {
 
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
+  const dispatch = useDispatch()
+
   const loginRequest = () => {
-    Axios.post(`${URL}/auth/logincommuter`,{
-      email: email,
-      password: password
-    }).then((response) => {
-      if(response.data.status){
-        console.log("OK")
+    if(email.split(" ").join("") == "" || password.split(" ").join("") == ""){
+      if(Platform.OS == "android"){
+        ToastAndroid.show("Please fill the fields properly", ToastAndroid.SHORT)
       }
       else{
-        console.log("Not OK")
+        alert("Please fill the fields properly")
       }
-    }).catch((err) => {
-      console.log(err);
-    })
+    }
+    else{
+      Axios.post(`${URL}/auth/logincommuter`,{
+        email: email,
+        password: password
+      }).then((response) => {
+        if(response.data.status){
+          if(Platform.OS == "android"){
+            ToastAndroid.show("Logged In", ToastAndroid.SHORT)
+          }
+          else{
+            alert("Logged In")
+          }
+
+          AsyncStorage.setItem("token", response.data.result.token)
+          setemail("")
+          setpassword("")
+          dispatch({ type: SET_AUTH_DETAILS, authdetails: {
+            auth: true,
+            userID: response.data.result.userID,
+            username: response.data.result.username
+          }})
+
+        }
+        else{
+          if(Platform.OS == "android"){
+            ToastAndroid.show("Failed to Log In", ToastAndroid.SHORT)
+          }
+          else{
+            alert("Failed to Log In")
+          }
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
   }
 
   return (
@@ -56,7 +91,7 @@ const Login = () => {
               </View>
               <View style={{padding: 10, marginTop: 20, marginBottom: 20, width: "100%", flex: 1, flexDirection: "row", justifyContent: "center"}}>
                 <Text style={{color: "#808080"}}>Don't have an account? </Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => { navigation.navigate("Register") }}>
                   <Text style={{color: "black"}}>Sign Up</Text>
                 </TouchableOpacity>
               </View>

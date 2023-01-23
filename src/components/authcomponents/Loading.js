@@ -3,8 +3,8 @@ import React from 'react'
 
 const Loading = () => {
   return (
-    <View>
-      <Text>Loading</Text>
+    <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+      <Text style={{color: "#808080"}}>Loading...</Text>
     </View>
   )
 }
