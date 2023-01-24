@@ -1,8 +1,9 @@
-import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
+import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import citylayout from '../../resources/citylayout.png'
 import IonIcons from 'react-native-vector-icons/Ionicons'
+import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Search = () => {
   
@@ -19,6 +20,14 @@ const Search = () => {
                 </View>
             </View>
             <Image source={citylayout} style={{width: "100%", height: 140, maxWidth: 385}} />
+        </View>
+        <View style={{backgroundColor: "transparent", flex: 1, width: "100%"}}>
+            <ScrollView style={{width: "100%", backgroundColor: "transparent"}} contentContainerStyle={{flexGrow: 1}}>
+                <View style={{backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center"}}>
+                    <MCIcons name='image-filter-none' style={{fontSize: 60}} />
+                    <Text style={{color: "#787878", fontSize: 13, marginTop: 10}}>Search something</Text>
+                </View>
+            </ScrollView>
         </View>
      </View>
     )
