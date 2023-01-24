@@ -1,11 +1,15 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import MIcons from 'react-native-vector-icons/MaterialIcons'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { SET_AUTH_DETAILS } from '../../redux/types/types'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const PersonalInfo = () => {
 
   const profiledetails = useSelector(state => state.profiledetails)
+
+  const dispatch = useDispatch()
   
   const convertAsterisk = (count) => {
     var counter = "";
@@ -15,6 +19,15 @@ const PersonalInfo = () => {
     }
 
     return counter
+  }
+
+  const logoutProcess = () => {
+    AsyncStorage.removeItem("token")
+    dispatch({ type: SET_AUTH_DETAILS, authdetails: {
+        auth: false,
+        userID: null,
+        username: ""
+    }})
   }
 
   return (
@@ -64,6 +77,11 @@ const PersonalInfo = () => {
                 </View>
                 <MIcons name='arrow-forward-ios' style={{fontSize: 20, color: "black"}} />
             </View>
+        </TouchableOpacity>
+      </View>
+      <View style={{backgroundColor: "transparent", marginTop: 30, width: "100%"}}>
+        <TouchableOpacity onPress={() => { logoutProcess() }} style={{backgroundColor: "red", width: 100, height: 40, borderRadius: 20, justifyContent: "center", alignItems: "center"}}>
+            <Text style={{fontSize: 15, color: "white"}}>Logout</Text>
         </TouchableOpacity>
       </View>
     </View>

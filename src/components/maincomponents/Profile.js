@@ -66,7 +66,7 @@ const Profile = ({navigation}) => {
         <View style={{backgroundColor: "transparent", width: "100%", height: 220, flexDirection: "column"}}>
           <View style={{flex: 1, justifyContent: "flex-end", alignItems: "center", paddingBottom: 10}}>
             <View style={{backgroundColor: "#D9D9D9", width: 100, height: 100, borderRadius: 100, justifyContent: "center", alignItems: "center", borderColor: "#808080", borderWidth: 1}}>
-              <Text style={{fontSize: 20, fontWeight: "bold", color: "black"}}>{profiledetails.name.split(" ")[0].split("")[0]}{profiledetails.name.split(" ")[1].split("")[0]}</Text>
+              <Text style={{fontSize: 20, fontWeight: "bold", color: "black"}}>{profiledetails.name == ""? "" : profiledetails.name.split(" ")[0].split("")[0]}{profiledetails.name.split(" ").length == 2? profiledetails.name == ""? "" : profiledetails.name.split(" ")[1].split("")[0] : ""}</Text>
             </View>
           </View>
           <View style={{width: "100%", backgroundColor: "transparent", height: 70, flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
@@ -84,7 +84,7 @@ const Profile = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{backgroundColor: "transparent", paddingTop: 10, paddingBottom: 10, width: "100%", height: 400}}>
+        <View style={{backgroundColor: "transparent", paddingTop: 10, paddingBottom: 10, width: "100%", height: 500}}>
           <ProfileStack.Navigator initialRouteName='PersonalInfo'>
             <ProfileStack.Screen name="PersonalInfo" component={PersonalInfo} options={{headerShown: false, animation: "slide_from_right"}} />
             <ProfileStack.Screen name="AdvanceInfo" component={AdvanceInfo} options={{headerShown: false, animation: "slide_from_right"}} />
