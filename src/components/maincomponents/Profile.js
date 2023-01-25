@@ -10,6 +10,7 @@ import PersonalInfo from '../partialcomponents/PersonalInfo'
 import AdvanceInfo from '../partialcomponents/AdvanceInfo'
 import Axios from 'axios'
 import { URL } from '../../json/urlconfig'
+import EditProfile from '../partialcomponents/EditProfile'
 
 const ProfileStack = createNativeStackNavigator()
 
@@ -88,6 +89,7 @@ const Profile = ({navigation}) => {
           <ProfileStack.Navigator initialRouteName='PersonalInfo'>
             <ProfileStack.Screen name="PersonalInfo" component={PersonalInfo} options={{headerShown: false, animation: "slide_from_right"}} />
             <ProfileStack.Screen name="AdvanceInfo" component={AdvanceInfo} options={{headerShown: false, animation: "slide_from_right"}} />
+            <ProfileStack.Screen name="EditProfile" component={EditProfile} options={{headerShown: false, animation: "slide_from_bottom"}} />
           </ProfileStack.Navigator>
         </View>
       </ScrollView>

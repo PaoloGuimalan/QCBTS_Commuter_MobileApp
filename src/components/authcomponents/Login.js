@@ -74,7 +74,7 @@ const Login = ({navigation}) => {
             <View style={styles.viewmainform}>
               <Text style={{...styles.text, ...styles.loginlabel}}>Log In</Text>
               <TextInput placeholder='Email' style={styles.textinput} value={email} onChangeText={(e) => { setemail(e) }} />
-              <TextInput placeholder='Password' style={styles.textinput} value={password} onChangeText={(e) => { setpassword(e) }} />
+              <TextInput secureTextEntry={true} placeholder='Password' style={styles.textinput} value={password} onChangeText={(e) => { setpassword(e) }} />
               <TouchableOpacity style={styles.loginbtn} onPress={() => { loginRequest() }}>
                 <Text style={styles.loginbtnlabel}>Log In</Text>
               </TouchableOpacity>

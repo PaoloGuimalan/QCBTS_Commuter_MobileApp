@@ -90,8 +90,8 @@ const Register = ({navigation}) => {
             <TextInput placeholder='Your Name' style={styles.textinput} value={regname} onChangeText={(e) => { setregname(e) }} />
             <TextInput placeholder='Email' style={styles.textinput} value={email} onChangeText={(e) => { setemail(e) }} />
             <TextInput placeholder='Contact Number' style={styles.textinput} value={contactnumber} onChangeText={(e) => { setcontactnumber(e) }} />
-            <TextInput placeholder='Password' style={styles.textinput} value={password} onChangeText={(e) => { setpassword(e) }} />
-            <TextInput placeholder='Confirm Password' style={styles.textinput} value={confpassword} onChangeText={(e) => { setconfpassword(e) }} />
+            <TextInput secureTextEntry={true} placeholder='Password' style={styles.textinput} value={password} onChangeText={(e) => { setpassword(e) }} />
+            <TextInput secureTextEntry={true} placeholder='Confirm Password' style={styles.textinput} value={confpassword} onChangeText={(e) => { setconfpassword(e) }} />
             <TouchableOpacity style={styles.loginbtn} onPress={() => { signuprequest() }}>
               <Text style={styles.loginbtnlabel}>Sign Up</Text>
             </TouchableOpacity>

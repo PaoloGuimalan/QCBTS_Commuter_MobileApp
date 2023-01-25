@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { SET_AUTH_DETAILS } from '../../redux/types/types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const PersonalInfo = () => {
+const PersonalInfo = ({navigation}) => {
 
   const profiledetails = useSelector(state => state.profiledetails)
 
@@ -39,10 +39,10 @@ const PersonalInfo = () => {
                     <Text style={{color: "#000000B2", fontSize: 12}}>UserID</Text>
                     <Text style={{color: '#000000', fontSize: 15}}>{profiledetails.userID}</Text>
                 </View>
-                <MIcons name='arrow-forward-ios' style={{fontSize: 20, color: "black"}} />
+                {/* <MIcons name='arrow-forward-ios' style={{fontSize: 20, color: "black"}} /> */}
             </View>
         </TouchableOpacity>
-        <TouchableOpacity style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 1}}>
+        <TouchableOpacity onPress={() => { navigation.navigate("EditProfile", { editType: "Name" }) }} style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 1}}>
             <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 20, paddingRight: 20, height: 70, alignItems: "center", flexDirection: "row"}}>
                 <View style={{flex: 1}}>
                     <Text style={{color: "#000000B2", fontSize: 12}}>Name</Text>
@@ -51,7 +51,7 @@ const PersonalInfo = () => {
                 <MIcons name='arrow-forward-ios' style={{fontSize: 20, color: "black"}} />
             </View>
         </TouchableOpacity>
-        <TouchableOpacity style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 1}}>
+        <TouchableOpacity onPress={() => { navigation.navigate("EditProfile", { editType: "Email" }) }} style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 1}}>
             <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 20, paddingRight: 20, height: 70, alignItems: "center", flexDirection: "row"}}>
                 <View style={{flex: 1}}>
                     <Text style={{color: "#000000B2", fontSize: 12}}>Email</Text>
@@ -60,7 +60,7 @@ const PersonalInfo = () => {
                 <MIcons name='arrow-forward-ios' style={{fontSize: 20, color: "black"}} />
             </View>
         </TouchableOpacity>
-        <TouchableOpacity style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 1}}>
+        <TouchableOpacity onPress={() => { navigation.navigate("EditProfile", { editType: "Contact Number" }) }} style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 1}}>
             <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 20, paddingRight: 20, height: 70, alignItems: "center", flexDirection: "row"}}>
                 <View style={{flex: 1}}>
                     <Text style={{color: "#000000B2", fontSize: 12}}>Contact Number</Text>
@@ -69,7 +69,7 @@ const PersonalInfo = () => {
                 <MIcons name='arrow-forward-ios' style={{fontSize: 20, color: "black"}} />
             </View>
         </TouchableOpacity>
-        <TouchableOpacity style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 0}}>
+        <TouchableOpacity onPress={() => { navigation.navigate("EditProfile", { editType: "Password" }) }} style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 0}}>
             <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 20, paddingRight: 20, height: 70, alignItems: "center", flexDirection: "row"}}>
                 <View style={{flex: 1}}>
                     <Text style={{color: "#000000B2", fontSize: 12}}>Password</Text>
