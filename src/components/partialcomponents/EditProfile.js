@@ -1,10 +1,16 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Platform, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import Axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { URL } from '../../json/urlconfig'
+import { SET_PROFILE_DETAILS } from '../../redux/types/types'
 
 const EditProfile = ({navigation, route}) => {
 
   const profiledetails = useSelector(state => state.profiledetails)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setnamedefault(profiledetails.name)
@@ -29,6 +35,250 @@ const EditProfile = ({navigation, route}) => {
 
   const [passwordvalidation, setpasswordvalidation] = useState("");
 
+  const profileInfoRequest = async () => {
+    await AsyncStorage.getItem("token").then((resp) => {
+      if(resp != null){
+        Axios.get(`${URL}/commuters/userinfo`, {
+          headers: {
+            "x-access-token": resp
+          }
+        }).then((response) => {
+          if(response.data.status){
+            // console.log(response.data.result)
+            dispatch({ type: SET_PROFILE_DETAILS, profiledetails: response.data.result })
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+    })
+  }
+
+  const updateName = async () => {
+    await AsyncStorage.getItem('token').then((resp) => {
+      if(resp != null){
+        Axios.post(`${URL}/commuters/editcommutername`, {
+          name: namedefault
+        },{
+          headers:{
+            "x-access-token": resp
+          }
+        }).then((response) => {
+          if(response.data.status){
+              if(Platform.OS == "android"){
+                ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+              }
+              else{
+                alert(response.data.message)
+              }
+              profileInfoRequest()
+              setTimeout(() => {
+                navigation.navigate("PersonalInfo")
+              }, 1000)
+          }
+          else{
+              if(Platform.OS == "android"){
+                ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+              }
+              else{
+                alert(response.data.message)
+              }
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
+  const updateEmail = async () => {
+    if(passwordvalidation.split(" ") == ""){
+      if(Platform.OS == "android"){
+        ToastAndroid.show("Please input password", ToastAndroid.SHORT)
+      }
+      else{
+        alert("Please input password")
+      }
+    }
+    else{
+      await AsyncStorage.getItem('token').then((resp) => {
+        if(resp != null){
+          Axios.post(`${URL}/commuters/editcommuteremail`, {
+            email: emaildefault,
+            password: passwordvalidation
+          },{
+            headers:{
+              "x-access-token": resp
+            }
+          }).then((response) => {
+            if(response.data.status){
+                if(Platform.OS == "android"){
+                  ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                }
+                else{
+                  alert(response.data.message)
+                }
+                setpasswordvalidation("")
+                profileInfoRequest()
+                setTimeout(() => {
+                  navigation.navigate("PersonalInfo")
+                }, 1000)
+            }
+            else{
+                if(Platform.OS == "android"){
+                  ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                }
+                else{
+                  alert(response.data.message)
+                }
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+  }
+
+  const updateContactNumber = async () => {
+    if(passwordvalidation.split(" ") == ""){
+      if(Platform.OS == "android"){
+        ToastAndroid.show("Please input password", ToastAndroid.SHORT)
+      }
+      else{
+        alert("Please input password")
+      }
+    }
+    else{
+      await AsyncStorage.getItem('token').then((resp) => {
+        if(resp != null){
+          Axios.post(`${URL}/commuters/editcommutercontactnumber`, {
+            contactnumber: contactnumber,
+            password: passwordvalidation
+          },{
+            headers:{
+              "x-access-token": resp
+            }
+          }).then((response) => {
+            if(response.data.status){
+                if(Platform.OS == "android"){
+                  ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                }
+                else{
+                  alert(response.data.message)
+                }
+                setpasswordvalidation("")
+                profileInfoRequest()
+                setTimeout(() => {
+                  navigation.navigate("PersonalInfo")
+                }, 1000)
+            }
+            else{
+                if(Platform.OS == "android"){
+                  ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                }
+                else{
+                  alert(response.data.message)
+                }
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+  }
+
+  const updatePassword = async () => {
+    if(oldpassword.split(" ") == ""){
+      if(Platform.OS == "android"){
+        ToastAndroid.show("Please input password", ToastAndroid.SHORT)
+      }
+      else{
+        alert("Please input password")
+      }
+    }
+    else{
+      if(confnewpassword.split(" ") == ""){
+        if(Platform.OS == "android"){
+          ToastAndroid.show("Please confirm password", ToastAndroid.SHORT)
+        }
+        else{
+          alert("Please confirm password")
+        }
+      }
+      else{
+        if(confnewpassword != oldpassword){
+          if(Platform.OS == "android"){
+            ToastAndroid.show("Password and Confirm Password do not match", ToastAndroid.SHORT)
+          }
+          else{
+            alert("Password and Confirm Password do not match")
+          }
+        }
+        else{
+          if(newpassword.split(" ") == ""){
+            if(Platform.OS == "android"){
+              ToastAndroid.show("Please provide a new password", ToastAndroid.SHORT)
+            }
+            else{
+              alert("Please provide a new password")
+            }
+          }
+          else{
+            await AsyncStorage.getItem('token').then((resp) => {
+              if(resp != null){
+                Axios.post(`${URL}/commuters/editcommuterpassword`, {
+                  newpassword: newpassword,
+                  password: oldpassword
+                },{
+                  headers:{
+                    "x-access-token": resp
+                  }
+                }).then((response) => {
+                  if(response.data.status){
+                      if(Platform.OS == "android"){
+                        ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                      }
+                      else{
+                        alert(response.data.message)
+                      }
+                      // setpasswordvalidation("")
+                      setnewpassword("")
+                      setoldpassword("")
+                      setconfnewpassword("")
+                      profileInfoRequest()
+                      setTimeout(() => {
+                        navigation.navigate("PersonalInfo")
+                      }, 1000)
+                  }
+                  else{
+                      if(Platform.OS == "android"){
+                        ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                      }
+                      else{
+                        alert(response.data.message)
+                      }
+                  }
+                }).catch((err) => {
+                  console.log(err)
+                })
+              }
+            }).catch((err) => {
+              console.log(err)
+            })
+          }
+        }
+      }
+    }
+  }
+
   return (
     <View style={{backgroundColor: "transparent", alignItems: "center", flexDirection: "column", paddingTop: 20, paddingLeft: 15, paddingRight: 15, borderColor: "#C1C1C1", borderTopWidth: 1}}>
       <Text style={{color: "#000000", fontSize: 17, fontWeight: "bold"}}>{route.params.editType}</Text>
@@ -43,7 +293,7 @@ const EditProfile = ({navigation, route}) => {
                 <TouchableOpacity onPress={() => { navigation.navigate("PersonalInfo") }} style={{width: 80, height: 40, backgroundColor: "transparent", borderRadius: 10, justifyContent: "center", alignItems: "center", marginRight: 10}}>
                     <Text style={{color: "black", fontSize: 15}}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{width: 80, height: 40, backgroundColor: "#294172", borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
+                <TouchableOpacity onPress={() => { updateName() }} style={{width: 80, height: 40, backgroundColor: "#294172", borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
                     <Text style={{color: "white", fontSize: 15}}>Save</Text>
                 </TouchableOpacity>
             </View>
@@ -59,7 +309,7 @@ const EditProfile = ({navigation, route}) => {
                 <TouchableOpacity onPress={() => { navigation.navigate("PersonalInfo") }} style={{width: 80, height: 40, backgroundColor: "transparent", borderRadius: 10, justifyContent: "center", alignItems: "center", marginRight: 10}}>
                     <Text style={{color: "black", fontSize: 15}}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{width: 80, height: 40, backgroundColor: "#294172", borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
+                <TouchableOpacity onPress={() => { updateEmail() }} style={{width: 80, height: 40, backgroundColor: "#294172", borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
                     <Text style={{color: "white", fontSize: 15}}>Save</Text>
                 </TouchableOpacity>
             </View>
@@ -75,7 +325,7 @@ const EditProfile = ({navigation, route}) => {
                 <TouchableOpacity onPress={() => { navigation.navigate("PersonalInfo") }} style={{width: 80, height: 40, backgroundColor: "transparent", borderRadius: 10, justifyContent: "center", alignItems: "center", marginRight: 10}}>
                     <Text style={{color: "black", fontSize: 15}}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{width: 80, height: 40, backgroundColor: "#294172", borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
+                <TouchableOpacity onPress={() => { updateContactNumber() }} style={{width: 80, height: 40, backgroundColor: "#294172", borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
                     <Text style={{color: "white", fontSize: 15}}>Save</Text>
                 </TouchableOpacity>
             </View>
@@ -94,7 +344,7 @@ const EditProfile = ({navigation, route}) => {
                 <TouchableOpacity onPress={() => { navigation.navigate("PersonalInfo") }} style={{width: 80, height: 40, backgroundColor: "transparent", borderRadius: 10, justifyContent: "center", alignItems: "center", marginRight: 10}}>
                     <Text style={{color: "black", fontSize: 15}}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{width: 80, height: 40, backgroundColor: "#294172", borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
+                <TouchableOpacity onPress={() => { updatePassword() }} style={{width: 80, height: 40, backgroundColor: "#294172", borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
                     <Text style={{color: "white", fontSize: 15}}>Save</Text>
                 </TouchableOpacity>
             </View>
