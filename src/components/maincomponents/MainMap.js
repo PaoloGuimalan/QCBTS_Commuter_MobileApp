@@ -6,26 +6,29 @@ import { locations } from '../../json/data'
 import BusStopIcon from '../../resources/OpenStop.png'
 import Axios from 'axios';
 import { URL } from '../../json/urlconfig'
+import { useSelector } from 'react-redux'
 
 const MainMap = () => {
 
   const google = window.google;
 
-  const [busStopsList, setbusStopsList] = useState([]);
+//   const [busStopsList, setbusStopsList] = useState([]);
+
+  const busStopsList = useSelector(state => state.busstopslist);
 
   useEffect(() => {
-    initEnabledBusStops()
+    // initEnabledBusStops()
   },[])
 
-  const initEnabledBusStops = () => {
-    Axios.get(`${URL}/company/enabledBusStops`).then((response) => {
-        if(response.data.status){
-            setbusStopsList(response.data.result)
-        }
-    }).catch((err) => {
-        console.log(err.message)
-    })
-  }
+//   const initEnabledBusStops = () => {
+//     Axios.get(`${URL}/company/enabledBusStops`).then((response) => {
+//         if(response.data.status){
+//             setbusStopsList(response.data.result)
+//         }
+//     }).catch((err) => {
+//         console.log(err.message)
+//     })
+//   }
 
   return (
     <View style={mainstyles.mainview}>

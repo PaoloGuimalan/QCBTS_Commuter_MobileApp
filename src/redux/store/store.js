@@ -1,9 +1,10 @@
 import { createStore, combineReducers } from "redux";
-import { setauthdetails, setprofiledetails } from "../action/action";
+import { setauthdetails, setbusstopslist, setprofiledetails } from "../action/action";
 
 const combiner = combineReducers({
     authdetails: setauthdetails,
-    profiledetails: setprofiledetails
+    profiledetails: setprofiledetails,
+    busstopslist: setbusstopslist
 })
 
 const store = createStore(combiner);
