@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import MainMap from '../maincomponents/MainMap'
-import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION } from '../../redux/types/types'
+import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_SELECTED_ROUTE } from '../../redux/types/types'
 import Axios from 'axios'
 import { URL } from '../../json/urlconfig'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -12,12 +12,15 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 import FontAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialComIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { selectedroutestate } from '../../redux/action/action'
 
-const Map = () => {
+const Map = ({navigation}) => {
   
     const authdetails = useSelector(state => state.authdetails);
     const busstopslist = useSelector(state => state.busstopslist);
     const enablelocation = useSelector(state => state.enablelocation)
+    const selectedroute = useSelector(state => state.selectedroute)
 
     const [toggleMapMenu, settoggleMapMenu] = useState(false)
 
@@ -74,6 +77,28 @@ const Map = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    {selectedroute.routeID != null? (
+                        <TouchableOpacity onPress={() => { navigation.navigate("RouteInfo", { id: selectedroute.routeID }) }} onLongPress={() => { dispatch({ type: SET_SELECTED_ROUTE, selectedroute: selectedroutestate }) }} style={{width: "100%"}}>
+                            <View style={{backgroundColor: "#808080", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15}}>
+                                <Text style={{color: "#404040", fontSize: 13}}>Selected Route:</Text>
+                                <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>{selectedroute.routeName} | {selectedroute.routeID}</Text>
+                                <Text style={{color: "#404040", fontSize: 13}}>{selectedroute.stationList.length} stations in this route</Text>
+                                <View style={{width: "100%", flexDirection: "row"}}>
+                                    <View style={{backgroundColor: "transparent", flexDirection: "column", justifyContent: "center", paddingTop: 10}}>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedroute.stationList[0].stationName}</Text>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedroute.stationList[selectedroute.stationList.length - 1].stationName}</Text>
+                                    </View>
+                                    <View style={{justifyContent: "center", alignItems: "flex-end", flex: 1, paddingTop: 5}}>
+                                        <MaterialComIcons name='directions-fork' style={{fontSize: 25, color: "#404040"}} />
+                                    </View>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    ) : 
+                    <View style={{backgroundColor: "#D3D3D3", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15, alignItems: "center"}}>
+                        <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>No Routes Selected</Text>
+                    </View>
+                }
                 </View>
             </ScrollView>
         </View>

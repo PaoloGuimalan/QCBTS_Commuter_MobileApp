@@ -7,9 +7,9 @@ import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { URL } from '../../json/urlconfig'
-import { SET_ROUTES_LIST } from '../../redux/types/types'
+import { SET_CURRENT_TAB, SET_ROUTES_LIST, SET_SELECTED_ROUTE } from '../../redux/types/types'
 
-const Routes = () => {
+const Routes = ({navigation}) => {
   
     const authdetails = useSelector(state => state.authdetails)
     const routeslist = useSelector(state => state.routeslist);
@@ -42,6 +42,27 @@ const Routes = () => {
         })
     }
 
+    const renameKey = ( obj, oldKey, newKey, nextoldKey, nextNewKey ) => {
+        obj[nextNewKey] = obj[nextoldKey];
+        obj[newKey] = obj[oldKey];
+        delete obj[nextoldKey];
+        delete obj[oldKey];
+      }
+
+    const selectRoute = (data) => {
+        const arr = data.routePath;
+        arr.forEach(obj => renameKey(obj, 'lng', 'longitude', "lat", "latitude"))
+
+        var newData = {
+            ...data,
+            routePath: arr
+        }
+
+        dispatch({ type: SET_SELECTED_ROUTE, selectedroute: newData })
+        dispatch({ type: SET_CURRENT_TAB, currenttab: "Map" })
+        navigation.navigate("Map")
+    }
+
     return (
         <View style={{flex: 1, justifyContent: "flex-start", alignItems: "center", backgroundColor: "white", flexDirection: "column"}}>
         <View style={{height: 180, backgroundColor: "#2B4273", width: "100%", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, justifyContent: "flex-end", alignItems: "center"}}>
@@ -60,7 +81,7 @@ const Routes = () => {
                     <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10}}>
                         {routeslist.map((data, i) => {
                             return(
-                                <TouchableOpacity key={data.routeID} style={{width: "100%", backgroundColor: 'transparent', borderWidth: 1, borderColor: "#808080", height: 65, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
+                                <TouchableOpacity onLongPress={() => { navigation.navigate("RouteInfo", { id: data.routeID }) }} onPress={() => { selectRoute(data) }} key={data.routeID} style={{width: "100%", backgroundColor: 'transparent', borderWidth: 1, borderColor: "#808080", height: 65, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
                                     <View style={{width: "100%"}}>
                                         <Text style={{color: "#808080", fontSize: 13}}>{data.routeID}</Text>
                                     </View>

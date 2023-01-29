@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import MapView, { Polygon, Polyline, Marker } from 'react-native-maps'
+import MapView, { Polygon, Polyline, Marker, Callout } from 'react-native-maps'
 import QCPath from '../../json/QCPath.json'
 import { locations } from '../../json/data'
 import BusStopIcon from '../../resources/OpenStop.png'
@@ -15,6 +15,7 @@ const MainMap = () => {
 //   const [busStopsList, setbusStopsList] = useState([]);
 
   const busStopsList = useSelector(state => state.busstopslist);
+  const selectedroute = useSelector(state => state.selectedroute)
 
   useEffect(() => {
     // initEnabledBusStops()
@@ -35,11 +36,16 @@ const MainMap = () => {
         <MapView
             onRegionChange={function(){return;}}
             style={mainstyles.map}
-            initialRegion={{
+            initialRegion={selectedroute.routeID != null? {
+                ...selectedroute.routePath[0],
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
+
+            } : {
                 latitude: 14.647296,
                 longitude: 121.061376,
                 latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                longitudeDelta: 0.0421
             }}
             minZoomLevel={12}
             mapType={'satellite'}
@@ -60,6 +66,25 @@ const MainMap = () => {
                     )
                 })
             )}
+            {selectedroute.routeID != null? (
+                <Marker
+                    coordinate={selectedroute.routePath[0]}
+                    style={{height: 30, width: 30}}
+                />
+            ) : null}
+            {selectedroute.routeID != null? (
+                <Marker
+                    coordinate={selectedroute.routePath[selectedroute.routePath.length - 1]}
+                    style={{height: 30, width: 30}}
+                />
+            ) : null}
+            {selectedroute.routeID != null? (
+                <Polyline
+                    coordinates={selectedroute.routePath}
+                    strokeColor={"lime"}
+                    strokeWidth={3}
+                />
+            ) : null}
             <Polygon
                 coordinates={locations}
                 strokeColor={"#ffbf00"}

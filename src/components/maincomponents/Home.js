@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import FA5 from 'react-native-vector-icons/FontAwesome5'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -8,13 +8,21 @@ import Feed from '../tabcomponents/Feed'
 import Search from '../tabcomponents/Search'
 import Map from '../tabcomponents/Map'
 import Routes from '../tabcomponents/Routes'
+import { SET_CURRENT_TAB } from '../../redux/types/types'
 
 const TabStack = createNativeStackNavigator()
 
 const Home = ({navigation}) => {
 
   const authdetails = useSelector(state => state.authdetails)
-  const [currentTab, setcurrentTab] = useState("Feed");
+  const currentTab = useSelector(state => state.currenttab);
+  // const [currentTab, setcurrentTab] = useState("Feed");
+
+  const dispatch = useDispatch()
+
+  const setcurrentTab = (tab) => {
+    dispatch({ type: SET_CURRENT_TAB, currenttab: tab })
+  }
 
   return (
     <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
