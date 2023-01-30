@@ -54,8 +54,8 @@ const Map = ({navigation}) => {
 
     return (
      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-        <View style={{backgroundColor: "white", position: "absolute", zIndex: 1, bottom: 90, width: "100%", maxWidth: 345, borderRadius: 10, flexDirection: "column", alignItems: "center", maxHeight: 300, height: toggleMapMenu? "100%" : 30}}>
-            <TouchableOpacity onPress={() => { settoggleMapMenu(!toggleMapMenu) }} style={{height: 30, width: "100%", justifyContent: "center", alignItems: "center", flexDirection: "row", paddingLeft: 15, paddingRight: 15}}>
+        <View style={{backgroundColor: "white", position: "absolute", zIndex: 1, bottom: 90, width: "100%", maxWidth: 345, borderRadius: 10, flexDirection: "column", alignItems: "center", maxHeight: 300, height: toggleMapMenu? "100%" : 30, paddingBottom: 5}}>
+            <TouchableOpacity onPress={() => { settoggleMapMenu(!toggleMapMenu) }} style={{height: 30, width: "100%", justifyContent: "center", alignItems: "center", flexDirection: "row", paddingLeft: 15, paddingRight: 15, borderBottomColor: "#808080", borderBottomWidth: toggleMapMenu? 1 : 0}}>
                 <Text style={{color: "black", fontSize: 15, fontWeight: "bold"}}>Menu</Text>
                 <View style={{flex: 1, justifyContent: "flex-end", alignItems: "center", flexDirection: 'row', paddingLeft: 10, paddingRight: 10}}>
                     <MaterialIcons name='directions' style={{ color: "red", fontSize: 20, marginLeft:5 }} />
@@ -64,17 +64,22 @@ const Map = ({navigation}) => {
                 </View>
                 <AntDesignIcon name={toggleMapMenu? 'down' : 'up'} style={{ color: "black", fontSize: 20 }} />
             </TouchableOpacity>
-            <ScrollView style={{width: "100%"}} contentContainerStyle={{flexGrow: 1}}>
-                <View style={{backgroundColor: "transparent", width: "100%", borderTopColor: "#808080", borderTopWidth: 1, paddingLeft: 15, paddingRight: 15, paddingTop: 10}}>
+            <ScrollView style={{width: "100%"}} contentContainerStyle={{flexGrow: 1}} fadingEdgeLength={5}>
+                <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 15, paddingRight: 15, paddingTop: 10}}>
                     <View style={{width: "100%", backgroundColor: "transparent", flexDirection: "row"}}>
-                        <View style={{width: "50%"}}>
-                            <Text style={{fontSize: 13, color: "black"}}>Current Location & Destination</Text>
+                        <View style={{width: "50%", paddingRight: 10}}>
+                            <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 35}}>Current Location & Destination</Text>
+                            <View style={{backgroundColor: "#D3D3D3", minHeight: 100, borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
+                                <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>Location not Enabled</Text>
+                            </View>
                         </View>
                         <View style={{width: "50%"}}>
-                            <Text style={{fontSize: 13, color: "black", marginBottom: 10}}>Enable Location Sharing</Text>
-                            <TouchableOpacity onPress={() => { dispatch({ type: SET_ENABLE_LOCATION, enablelocation: !enablelocation }) }} style={{backgroundColor: enablelocation? "red" : "green", width: 70, height: 30, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
-                                <Text style={{color: "white", fontSize: 13}}>{enablelocation? "Disable" : "Enable"}</Text>
-                            </TouchableOpacity>
+                            <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 35}}>Enable Location Sharing</Text>
+                            <View style={{backgroundColor: "#D3D3D3", minHeight: 100, borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
+                                <TouchableOpacity onPress={() => { dispatch({ type: SET_ENABLE_LOCATION, enablelocation: !enablelocation }) }} style={{backgroundColor: enablelocation? "red" : "green", width: 70, height: 30, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
+                                    <Text style={{color: "white", fontSize: 13}}>{enablelocation? "Disable" : "Enable"}</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                     {selectedroute.routeID != null? (
