@@ -5,14 +5,18 @@ import Home from './Home'
 import Profile from './Profile'
 import FeedInfo from './FeedInfo'
 import RouteInfo from './RouteInfo'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
+import { SET_CURRENT_LOCATION } from '../../redux/types/types'
+import BusStopInfo from './BusStopInfo'
 
 const BodyStack = createNativeStackNavigator()
 
 const MainHome = ({navigation}) => {
 
   const enablelocation = useSelector(state => state.enablelocation)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     scanGeolocation()
@@ -34,11 +38,16 @@ const MainHome = ({navigation}) => {
 
           // console.log(permitlocation)
           if(permitlocation == "granted"){
-            console.log(permitlocation)
+            // console.log(permitlocation)
             //change to getCurrentPosition w/ setInterval
             geoInterval.current = setInterval(() => {
               Geolocation.getCurrentPosition((position) => {
                 // console.log(position)
+                dispatch({ type: SET_CURRENT_LOCATION, currentlocation: {
+                  status: true,
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude
+                } })
               },(error) => {
                 console.log(error)
               })
@@ -61,6 +70,11 @@ const MainHome = ({navigation}) => {
     else{
       clearInterval(geoInterval.current)
       geoInterval.current = null;
+      dispatch({ type: SET_CURRENT_LOCATION, currentlocation: {
+        status: false,
+        lat: "",
+        lng: ""
+      } })
     }
   }
 
@@ -70,6 +84,7 @@ const MainHome = ({navigation}) => {
         <BodyStack.Screen name='Profile' component={Profile} options={{headerShown: false, animation: "slide_from_bottom"}} />
         <BodyStack.Screen name='FeedInfo' component={FeedInfo} options={{headerShown: false, animation: "slide_from_right"}} />
         <BodyStack.Screen name='RouteInfo' component={RouteInfo} options={{headerShown: false, animation: "slide_from_right"}} />
+        <BodyStack.Screen name='BusStopInfo' component={BusStopInfo} options={{headerShown: false, animation: "slide_from_right"}} />
     </BodyStack.Navigator>
   )
 }

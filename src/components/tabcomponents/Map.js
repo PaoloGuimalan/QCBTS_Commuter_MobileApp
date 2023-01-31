@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import MainMap from '../maincomponents/MainMap'
-import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_SELECTED_ROUTE } from '../../redux/types/types'
+import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE } from '../../redux/types/types'
 import Axios from 'axios'
 import { URL } from '../../json/urlconfig'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -21,6 +21,7 @@ const Map = ({navigation}) => {
     const busstopslist = useSelector(state => state.busstopslist);
     const enablelocation = useSelector(state => state.enablelocation)
     const selectedroute = useSelector(state => state.selectedroute)
+    const currentlocation = useSelector(state => state.currentlocation);
 
     const [toggleMapMenu, settoggleMapMenu] = useState(false)
 
@@ -28,6 +29,10 @@ const Map = ({navigation}) => {
 
     useEffect(() => {
         initBusStopsList()
+
+        return () => {
+            dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: "" })
+        }
     },[])
 
     const initBusStopsList = async () => {
@@ -52,6 +57,23 @@ const Map = ({navigation}) => {
         })
     }
 
+    const computeDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371e3;
+        const φ1 = parseFloat(lat1) * Math.PI/180;
+        const φ2 = parseFloat(lat2) * Math.PI/180;
+        const Δφ = (parseFloat(lat2) - parseFloat(lat1)) * Math.PI/180;
+        const Δλ = (parseFloat(lon2) - parseFloat(lon1)) * Math.PI/180;
+
+        const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        const d = R * c;
+
+        return d;
+    }
+
     return (
      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
         <View style={{backgroundColor: "white", position: "absolute", zIndex: 1, bottom: 90, width: "100%", maxWidth: 345, borderRadius: 10, flexDirection: "column", alignItems: "center", maxHeight: 300, height: toggleMapMenu? "100%" : 30, paddingBottom: 5}}>
@@ -67,14 +89,40 @@ const Map = ({navigation}) => {
             <ScrollView style={{width: "100%"}} contentContainerStyle={{flexGrow: 1}} fadingEdgeLength={5}>
                 <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 15, paddingRight: 15, paddingTop: 10}}>
                     <View style={{width: "100%", backgroundColor: "transparent", flexDirection: "row"}}>
-                        <View style={{width: "50%", paddingRight: 10}}>
-                            <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 35}}>Current Location & Destination</Text>
-                            <View style={{backgroundColor: "#D3D3D3", minHeight: 100, borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
-                                <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>Location not Enabled</Text>
-                            </View>
+                        <View style={{width: "70%", paddingRight: 10}}>
+                            <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 30}}>Stations Nearby</Text>
+                            {currentlocation.status? (
+                                <View style={{backgroundColor: "#D3D3D3", height: 100, borderRadius: 10, overflow: "hidden"}}>
+                                    <ScrollView style={{backgroundColor: "#D3D3D3", height: "100%", width: "100%", borderRadius: 10}} contentContainerStyle={{flexGrow: 1}}>
+                                        {
+                                            busstopslist.map((stops, i) => {
+                                                if(computeDistance(currentlocation.lat, currentlocation.lng, stops.coordinates.latitude, stops.coordinates.longitude) < 50) {
+                                                    return(
+                                                        <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: stops.busStopID }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "#808080", height: 70, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 2, marginTop: 2}}>
+                                                            <View style={{width: "100%", height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                                                                <Text style={{color: "white", fontSize: 13, fontWeight: "bold"}}>You are near {stops.stationName}</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                        )
+                                                }
+                                                else{
+                                                    (
+                                                    <View key={i} style={{backgroundColor: "#D3D3D3", minHeight: 100, borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
+                                                        <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>No Bus Stop nearby</Text>
+                                                    </View>
+                                                )}
+                                            })
+                                        }
+                                    </ScrollView>
+                                </View>
+                            ) : (
+                                <View style={{backgroundColor: "#D3D3D3", minHeight: 100, borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
+                                    <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>Location not Enabled</Text>
+                                </View>
+                            )}
                         </View>
-                        <View style={{width: "50%"}}>
-                            <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 35}}>Enable Location Sharing</Text>
+                        <View style={{width: "30%"}}>
+                            <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 30}}>Location Sharing</Text>
                             <View style={{backgroundColor: "#D3D3D3", minHeight: 100, borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
                                 <TouchableOpacity onPress={() => { dispatch({ type: SET_ENABLE_LOCATION, enablelocation: !enablelocation }) }} style={{backgroundColor: enablelocation? "red" : "green", width: 70, height: 30, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
                                     <Text style={{color: "white", fontSize: 13}}>{enablelocation? "Disable" : "Enable"}</Text>

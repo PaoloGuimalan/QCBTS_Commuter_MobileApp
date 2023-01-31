@@ -1,12 +1,13 @@
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import MapView, { Polygon, Polyline, Marker, Callout } from 'react-native-maps'
+import MapView, { Polygon, Polyline, Marker, Callout, Circle } from 'react-native-maps'
 import QCPath from '../../json/QCPath.json'
 import { locations } from '../../json/data'
 import BusStopIcon from '../../resources/OpenStop.png'
 import Axios from 'axios';
 import { URL } from '../../json/urlconfig'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { SET_SELECTED_BUS_STOP } from '../../redux/types/types'
 
 const MainMap = () => {
 
@@ -16,6 +17,10 @@ const MainMap = () => {
 
   const busStopsList = useSelector(state => state.busstopslist);
   const selectedroute = useSelector(state => state.selectedroute)
+  const currentlocation = useSelector(state => state.currentlocation)
+  const selectedbusstop = useSelector(state => state.selectedbusstop);
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     // initEnabledBusStops()
@@ -60,11 +65,42 @@ const MainMap = () => {
                                 longitude: parseFloat(stops.coordinates.longitude)
                             }}
                             style={{height: 30, width: 30}}
+                            onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: stops.busStopID }) }}
                         >
-                            <Image source={BusStopIcon} style={{height: 25, width: 25, borderColor: "#ffbf00", borderWidth: 2, borderRadius: 25}} />
+                            <Image source={BusStopIcon} style={{height: 25, width: 25, borderColor: selectedbusstop == stops.busStopID? "lime" : "#ffbf00", borderWidth: 2, borderRadius: 25}} />
                         </Marker>
                     )
                 })
+            )}
+            {busStopsList.length == 0? null : (
+                busStopsList.map((stops, i) => {
+                    return(
+                        <Circle
+                            key={i}
+                            center={{
+                                latitude: parseFloat(stops.coordinates.latitude), 
+                                longitude: parseFloat(stops.coordinates.longitude)
+                            }}
+                            radius={50}
+                            fillColor="transparent"
+                            strokeWidth={2}
+                            strokeColor={selectedbusstop == stops.busStopID? "lime" : "orange"}
+                        >
+                        </Circle>
+                    )
+                })
+            )}
+            {currentlocation.status == false? null : (
+                <Marker
+                    coordinate={{
+                        latitude: parseFloat(currentlocation.lat), 
+                        longitude: parseFloat(currentlocation.lng)
+                    }}
+                    style={{height: 30, width: 30}}
+                >
+                    <View style={{backgroundColor: "lime", width: 20, height: 20, borderRadius: 20, borderWidth: 2, borderColor: "white"}}>
+                    </View>
+                </Marker>
             )}
             {selectedroute.routeID != null? (
                 <Marker
