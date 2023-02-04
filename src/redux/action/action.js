@@ -1,4 +1,4 @@
-import { SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LOCATION, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE } from "../types/types";
+import { SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LOCATION, SET_FEED_LIST, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE } from "../types/types";
 
 export const authdetailsstate = {
     auth: null,
@@ -109,6 +109,15 @@ export const setselectedbusstop = (state = "", action) => {
     switch(action.type){
         case SET_SELECTED_BUS_STOP:
             return action.selectedbusstop;
+        default:
+            return state;
+    }
+}
+
+export const setfeedlist = (state = [], action) => {
+    switch(action.type){
+        case SET_FEED_LIST:
+            return action.feedlist;
         default:
             return state;
     }

@@ -50,7 +50,8 @@ const MainHome = ({navigation}) => {
                 } })
               },(error) => {
                 console.log(error)
-              })
+              },
+              {enableHighAccuracy: false, timeout: 10000, maximumAge: 3000})
             },1000)
           }
           else{

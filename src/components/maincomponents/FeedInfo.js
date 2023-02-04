@@ -1,10 +1,14 @@
 import { View, Text, ScrollView, Image, ImageBackground, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import featuredsample from '../../resources/featuredsample.jpg'
 import MIcons from 'react-native-vector-icons/MaterialIcons'
 import IonIcons from 'react-native-vector-icons/Ionicons'
+import { useDispatch, useSelector } from 'react-redux'
+import Axios from 'axios'
+import { URL } from '../../json/urlconfig'
 
 const FeedInfo = ({navigation, route}) => {
+
   return (
     <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
       <ScrollView style={{width: "100%"}} contentContainerStyle={{flexGrow: 1, alignItems: "center"}}>
