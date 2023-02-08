@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions, Image } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MapView, { Polygon, Polyline, Marker, Callout, Circle } from 'react-native-maps'
 import QCPath from '../../json/QCPath.json'

@@ -22,6 +22,7 @@ const Map = ({navigation}) => {
     const enablelocation = useSelector(state => state.enablelocation)
     const selectedroute = useSelector(state => state.selectedroute)
     const currentlocation = useSelector(state => state.currentlocation);
+    const selectedbusstop = useSelector(state => state.selectedbusstop);
 
     const [toggleMapMenu, settoggleMapMenu] = useState(false)
 
@@ -74,6 +75,10 @@ const Map = ({navigation}) => {
         return d;
     }
 
+    const markasWaiting = (busStopID) => {
+        alert(`OK ${busStopID}`)
+    }
+
     return (
      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
         <View style={{backgroundColor: "white", position: "absolute", zIndex: 1, bottom: 90, width: "100%", maxWidth: 345, borderRadius: 10, flexDirection: "column", alignItems: "center", maxHeight: 300, height: toggleMapMenu? "100%" : 30, paddingBottom: 5}}>
@@ -98,9 +103,25 @@ const Map = ({navigation}) => {
                                             busstopslist.map((stops, i) => {
                                                 if(computeDistance(currentlocation.lat, currentlocation.lng, stops.coordinates.latitude, stops.coordinates.longitude) < 50) {
                                                     return(
-                                                        <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: stops.busStopID }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "#808080", height: 70, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 2, marginTop: 2}}>
-                                                            <View style={{width: "100%", height: '100%', justifyContent: 'center', alignItems: 'center'}}>
-                                                                <Text style={{color: "white", fontSize: 13, fontWeight: "bold"}}>You are near {stops.stationName}</Text>
+                                                        <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: stops.busStopID }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "#808080", height: selectedbusstop == stops.busStopID? 100 : 70, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 2, marginTop: 2, flexDirection: "column"}}>
+                                                            <View style={{width: "100%", height: '100%', justifyContent: 'flex-start', alignItems: 'center', flexDirection: "row", paddingLeft: 10, paddingRight: 10}}>
+                                                                <MaterialComIcons name='bus-stop-covered' style={{fontSize: 30, color: "white"}} />
+                                                                <View style={{flex: 1, backgroundColor: "transparent", height: "100%", flexDirection: "column", paddingLeft: 10, justifyContent: "center"}}>
+                                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.busStopID}</Text>
+                                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.stationName}</Text>
+                                                                    {selectedbusstop == stops.busStopID? (
+                                                                        <View style={{paddingTop: 10, flexDirection: "row"}}>
+                                                                            <TouchableOpacity onPress={() => { markasWaiting(stops.busStopID) }} style={{backgroundColor: "orange", width: 50, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5, marginRight: 5}}>
+                                                                                <Text style={{fontSize: 13, color: "white"}}>Wait</Text>
+                                                                            </TouchableOpacity>
+                                                                            <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: "" }) }} style={{backgroundColor: "red", width: 50, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5}}>
+                                                                                <Text style={{fontSize: 13, color: "white"}}>Close</Text>
+                                                                            </TouchableOpacity>
+                                                                        </View>
+                                                                    ) : (
+                                                                        <View></View>
+                                                                    )}
+                                                                </View>
                                                             </View>
                                                         </TouchableOpacity>
                                                         )
