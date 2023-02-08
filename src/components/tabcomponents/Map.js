@@ -1,8 +1,8 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, Image, ScrollView, Platform, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import MainMap from '../maincomponents/MainMap'
-import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE } from '../../redux/types/types'
+import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from '../../redux/types/types'
 import Axios from 'axios'
 import { URL } from '../../json/urlconfig'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -13,7 +13,7 @@ import FontAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialComIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { selectedroutestate } from '../../redux/action/action'
+import { selectedroutestate, waitingbusstopstate } from '../../redux/action/action'
 
 const Map = ({navigation}) => {
   
@@ -23,6 +23,7 @@ const Map = ({navigation}) => {
     const selectedroute = useSelector(state => state.selectedroute)
     const currentlocation = useSelector(state => state.currentlocation);
     const selectedbusstop = useSelector(state => state.selectedbusstop);
+    const waitingbusstop = useSelector(state => state.waitingbusstop)
 
     const [toggleMapMenu, settoggleMapMenu] = useState(false)
 
@@ -75,8 +76,93 @@ const Map = ({navigation}) => {
         return d;
     }
 
-    const markasWaiting = (busStopID) => {
-        alert(`OK ${busStopID}`)
+    const initWaitingData = async () => {
+        await AsyncStorage.getItem("token").then((resp) => {
+          if(resp != null){
+            Axios.get(`${URL}/commuters/initWaitingData`, {
+              headers:{
+                "x-access-token": resp
+              }
+            }).then((response) => {
+              if(response.data.status){
+                if(response.data.result == "OK"){
+                    console.log("C1", response.data.result)
+                    dispatch({type: SET_WAITING_BUS_STOP, waitingbusstop: waitingbusstopstate})
+                }
+                else{
+                    dispatch({type: SET_WAITING_BUS_STOP, waitingbusstop: response.data.result})
+                }
+              }
+              else{
+                console.log("C2", response.data.message)
+              }
+            }).catch((err) => {
+              console.log(err)
+            })
+          }
+        })
+      }
+
+    const markasWaiting = async (busStopID) => {
+        await AsyncStorage.getItem("token").then((resp) => {
+            Axios.post(`${URL}/commuters/postWaitingStatus`, {
+                busStopID: busStopID
+            },{
+                headers:{
+                    "x-access-token": resp
+                }
+            }).then((response) => {
+                if(response.data.status){
+                    if(Platform.OS == "android"){
+                        ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                    }
+                    else{
+                        alert(response.data.message)
+                    }
+                    initWaitingData()
+                }
+                else{
+                    if(Platform.OS == "android"){
+                        ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                    }
+                    else{
+                        alert(response.data.message)
+                    }
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
+        })
+    }
+
+    const markasIdle = async () => {
+        await AsyncStorage.getItem("token").then((resp) => {
+            Axios.post(`${URL}/commuters/postIdleStatus`, {},{
+              headers: {
+                "x-access-token": resp
+              }
+            }).then((response) => {
+                if(response.data.status){
+                  if(Platform.OS == "android"){
+                    ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                  }
+                  else{
+                    alert(response.data.message)
+                  }
+                  initWaitingData()
+                }
+                else{
+                  if(Platform.OS == "android"){
+                    ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+                  }
+                  else{
+                    alert(response.data.message)
+                  }
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
+        })
     }
 
     return (
@@ -99,32 +185,54 @@ const Map = ({navigation}) => {
                             {currentlocation.status? (
                                 <View style={{backgroundColor: "#D3D3D3", height: 100, borderRadius: 10, overflow: "hidden"}}>
                                     <ScrollView style={{backgroundColor: "#D3D3D3", height: "100%", width: "100%", borderRadius: 10}} contentContainerStyle={{flexGrow: 1}}>
-                                        {
-                                            busstopslist.map((stops, i) => {
-                                                if(computeDistance(currentlocation.lat, currentlocation.lng, stops.coordinates.latitude, stops.coordinates.longitude) < 50) {
-                                                    return(
-                                                        <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: stops.busStopID }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "#808080", height: selectedbusstop == stops.busStopID? 100 : 70, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 2, marginTop: 2, flexDirection: "column"}}>
+                                        {busstopslist.map((stops, i) => {
+                                            if(stops.busStopID == waitingbusstop.busStopID){
+                                                return(
+                                                    <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: stops.busStopID }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "orange", height: 100, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 2, marginTop: 2, flexDirection: "column"}}>
                                                             <View style={{width: "100%", height: '100%', justifyContent: 'flex-start', alignItems: 'center', flexDirection: "row", paddingLeft: 10, paddingRight: 10}}>
                                                                 <MaterialComIcons name='bus-stop-covered' style={{fontSize: 30, color: "white"}} />
                                                                 <View style={{flex: 1, backgroundColor: "transparent", height: "100%", flexDirection: "column", paddingLeft: 10, justifyContent: "center"}}>
-                                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.busStopID}</Text>
+                                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.busStopID} | Waiting...</Text>
                                                                     <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.stationName}</Text>
-                                                                    {selectedbusstop == stops.busStopID? (
-                                                                        <View style={{paddingTop: 10, flexDirection: "row"}}>
-                                                                            <TouchableOpacity onPress={() => { markasWaiting(stops.busStopID) }} style={{backgroundColor: "orange", width: 50, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5, marginRight: 5}}>
-                                                                                <Text style={{fontSize: 13, color: "white"}}>Wait</Text>
-                                                                            </TouchableOpacity>
-                                                                            <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: "" }) }} style={{backgroundColor: "red", width: 50, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5}}>
-                                                                                <Text style={{fontSize: 13, color: "white"}}>Close</Text>
-                                                                            </TouchableOpacity>
-                                                                        </View>
-                                                                    ) : (
-                                                                        <View></View>
-                                                                    )}
+                                                                    <View style={{paddingTop: 10, flexDirection: "row"}}>
+                                                                        <TouchableOpacity onPress={() => { markasIdle() }} style={{backgroundColor: "red", width: 100, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5, marginRight: 5}}>
+                                                                            <Text style={{fontSize: 13, color: "white"}}>Cancel Await</Text>
+                                                                        </TouchableOpacity>
+                                                                    </View>
                                                                 </View>
                                                             </View>
                                                         </TouchableOpacity>
-                                                        )
+                                                )
+                                            }
+                                        })}
+                                        {
+                                            busstopslist.map((stops, i) => {
+                                                if(computeDistance(currentlocation.lat, currentlocation.lng, stops.coordinates.latitude, stops.coordinates.longitude) < 50) {
+                                                    if(stops.busStopID != waitingbusstop.busStopID){
+                                                        return(
+                                                            <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: stops.busStopID }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "#808080", height: selectedbusstop == stops.busStopID? 100 : 70, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 2, marginTop: 2, flexDirection: "column"}}>
+                                                                <View style={{width: "100%", height: '100%', justifyContent: 'flex-start', alignItems: 'center', flexDirection: "row", paddingLeft: 10, paddingRight: 10}}>
+                                                                    <MaterialComIcons name='bus-stop-covered' style={{fontSize: 30, color: "white"}} />
+                                                                    <View style={{flex: 1, backgroundColor: "transparent", height: "100%", flexDirection: "column", paddingLeft: 10, justifyContent: "center"}}>
+                                                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.busStopID}</Text>
+                                                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.stationName}</Text>
+                                                                        {selectedbusstop == stops.busStopID? (
+                                                                            <View style={{paddingTop: 10, flexDirection: "row"}}>
+                                                                                <TouchableOpacity onPress={() => { markasWaiting(stops.busStopID) }} style={{backgroundColor: "orange", width: 50, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5, marginRight: 5}}>
+                                                                                    <Text style={{fontSize: 13, color: "white"}}>Wait</Text>
+                                                                                </TouchableOpacity>
+                                                                                <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: "" }) }} style={{backgroundColor: "red", width: 50, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5}}>
+                                                                                    <Text style={{fontSize: 13, color: "white"}}>Close</Text>
+                                                                                </TouchableOpacity>
+                                                                            </View>
+                                                                        ) : (
+                                                                            <View></View>
+                                                                        )}
+                                                                    </View>
+                                                                </View>
+                                                            </TouchableOpacity>
+                                                            )
+                                                    }
                                                 }
                                                 else{
                                                     (

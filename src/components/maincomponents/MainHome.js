@@ -1,4 +1,4 @@
-import { View, Text, Platform, PermissionsAndroid } from 'react-native'
+import { View, Text, Platform, PermissionsAndroid, ToastAndroid } from 'react-native'
 import React, { useEffect, useRef } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Home from './Home'
@@ -7,8 +7,12 @@ import FeedInfo from './FeedInfo'
 import RouteInfo from './RouteInfo'
 import { useDispatch, useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
-import { SET_CURRENT_LOCATION } from '../../redux/types/types'
+import { SET_CURRENT_LOCATION, SET_WAITING_BUS_STOP } from '../../redux/types/types'
 import BusStopInfo from './BusStopInfo'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { URL } from '../../json/urlconfig'
+import Axios from 'axios'
+import { waitingbusstopstate } from '../../redux/action/action'
 
 const BodyStack = createNativeStackNavigator()
 
@@ -76,8 +80,66 @@ const MainHome = ({navigation}) => {
         lat: "",
         lng: ""
       } })
+      markasIdle()
     }
   }
+
+  const initWaitingData = async () => {
+    await AsyncStorage.getItem("token").then((resp) => {
+      if(resp != null){
+        Axios.get(`${URL}/commuters/initWaitingData`, {
+          headers:{
+            "x-access-token": resp
+          }
+        }).then((response) => {
+          if(response.data.status){
+            if(response.data.result == "OK"){
+              console.log("C1", response.data.result)
+              dispatch({type: SET_WAITING_BUS_STOP, waitingbusstop: waitingbusstopstate})
+            }
+            else{
+              dispatch({type: SET_WAITING_BUS_STOP, waitingbusstop: response.data.result})
+            }
+          }
+          else{
+            console.log("C2", response.data.message)
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+    })
+  }
+
+  const markasIdle = async () => {
+    await AsyncStorage.getItem("token").then((resp) => {
+        Axios.post(`${URL}/commuters/postIdleStatus`, {},{
+          headers: {
+            "x-access-token": resp
+          }
+        }).then((response) => {
+            if(response.data.status){
+              if(Platform.OS == "android"){
+                ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+              }
+              else{
+                alert(response.data.message)
+              }
+              initWaitingData()
+            }
+            else{
+              if(Platform.OS == "android"){
+                ToastAndroid.show(response.data.message, ToastAndroid.SHORT)
+              }
+              else{
+                alert(response.data.message)
+              }
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
+    })
+}
 
   return (
     <BodyStack.Navigator>

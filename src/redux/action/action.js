@@ -1,4 +1,4 @@
-import { SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LOCATION, SET_FEED_LIST, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE } from "../types/types";
+import { SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LOCATION, SET_FEED_INFO, SET_FEED_LIST, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from "../types/types";
 
 export const authdetailsstate = {
     auth: null,
@@ -118,6 +118,42 @@ export const setfeedlist = (state = [], action) => {
     switch(action.type){
         case SET_FEED_LIST:
             return action.feedlist;
+        default:
+            return state;
+    }
+}
+
+export const waitingbusstopstate = {
+    busStopID: '',
+    userID: '',
+    date: '',
+    time: '',
+    status: ''
+}
+
+export const setwaitingbusstop = (state = waitingbusstopstate, action) => {
+    switch(action.type){
+        case SET_WAITING_BUS_STOP:
+            return action.waitingbusstop;
+        default:
+            return state;
+    }
+}
+
+export const feedinfostate = {
+    postID: "",
+    title: "",
+    preview: "",
+    content: "",
+    viewers: "",
+    date: "",
+    time: "",
+}
+
+export const setfeedinfo = (state = feedinfostate, action) => {
+    switch(action.type){
+        case SET_FEED_INFO:
+            return action.feedinfo;
         default:
             return state;
     }
