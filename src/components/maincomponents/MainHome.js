@@ -22,6 +22,51 @@ const MainHome = ({navigation}) => {
 
   const dispatch = useDispatch()
 
+  let cancelAxios;
+
+  useEffect(() => {
+    subscribeWaitingStatus()
+  },[])
+
+  const subscribeWaitingStatus = async () => {
+    await AsyncStorage.getItem("token").then((resp) => {
+      if(resp != null){
+        if(typeof cancelAxios != typeof undefined){
+          cancelAxios.cancel()
+        }
+        else{
+          cancelAxios = Axios.CancelToken.source()
+          Axios.get(`${URL}/commuters/pollWaitingStatus`,{
+            headers:{
+              "x-access-token": resp
+            },
+            cancelToken: cancelAxios.token
+          }).then((response) => {
+            //nothing to do
+            if(response.data.status){
+              //run init commands
+              cancelAxios = undefined
+              subscribeWaitingStatus()
+            }
+            else{
+              //also run init commands
+              // cancelAxios()
+              // subscribeMessages()
+              subscribeWaitingStatus()
+            }
+          }).catch((err) => {
+            console.log(err);
+            if(err.message != 'canceled'){
+              //run init commands
+              cancelAxios = undefined
+              subscribeWaitingStatus()
+            }
+          })
+        }
+      }
+    })
+  }
+
   useEffect(() => {
     scanGeolocation()
   },[enablelocation])
