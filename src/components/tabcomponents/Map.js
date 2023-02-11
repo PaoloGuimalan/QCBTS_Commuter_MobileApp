@@ -2,9 +2,9 @@ import { View, Text, TouchableOpacity, Image, ScrollView, Platform, ToastAndroid
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import MainMap from '../maincomponents/MainMap'
-import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from '../../redux/types/types'
+import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_LIVE_BUST_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from '../../redux/types/types'
 import Axios from 'axios'
-import { URL } from '../../json/urlconfig'
+import { EXT_URL, URL } from '../../json/urlconfig'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import citylayout from '../../resources/citylayout.png'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -165,6 +165,22 @@ const Map = ({navigation}) => {
         })
     }
 
+    useEffect(() => {
+        var interval = setInterval(() => {
+            Axios.get(`${EXT_URL}/liveData`).then((response) => {
+                var arrayData = Object.values(response.data)
+                // console.log(arrayData)
+                dispatch({type: SET_LIVE_BUST_LIST, livebuslist: arrayData})
+            }).catch((err) => {
+                console.log(err)
+            })
+        },2000)
+
+        return () => {
+            clearInterval(interval)
+        }
+    },[])
+
     return (
      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
         <View style={{backgroundColor: "white", position: "absolute", zIndex: 1, bottom: 90, width: "100%", maxWidth: 345, borderRadius: 10, flexDirection: "column", alignItems: "center", maxHeight: 300, height: toggleMapMenu? "100%" : 30, paddingBottom: 5}}>
@@ -178,7 +194,7 @@ const Map = ({navigation}) => {
                 <AntDesignIcon name={toggleMapMenu? 'down' : 'up'} style={{ color: "black", fontSize: 20 }} />
             </TouchableOpacity>
             <ScrollView style={{width: "100%"}} contentContainerStyle={{flexGrow: 1}} fadingEdgeLength={5}>
-                <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 15, paddingRight: 15, paddingTop: 10}}>
+                <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10}}>
                     <View style={{width: "100%", backgroundColor: "transparent", flexDirection: "row"}}>
                         <View style={{width: "70%", paddingRight: 10}}>
                             <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 30}}>Stations Nearby</Text>
@@ -258,6 +274,9 @@ const Map = ({navigation}) => {
                                 </TouchableOpacity>
                             </View>
                         </View>
+                    </View>
+                    <View style={{backgroundColor: "#D3D3D3", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15, alignItems: "center"}}>
+                        <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>No Bus Selected</Text>
                     </View>
                     {selectedroute.routeID != null? (
                         <TouchableOpacity onPress={() => { navigation.navigate("RouteInfo", { id: selectedroute.routeID }) }} onLongPress={() => { dispatch({ type: SET_SELECTED_ROUTE, selectedroute: selectedroutestate }) }} style={{width: "100%"}}>

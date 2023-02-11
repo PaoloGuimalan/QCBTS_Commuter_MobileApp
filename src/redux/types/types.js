@@ -16,3 +16,5 @@ export const SET_FEED_LIST = 'SET_FEED_LIST';
 export const SET_WAITING_BUS_STOP = 'SET_WAITING_BUS_STOP';
 
 export const SET_FEED_INFO = 'SET_FEED_INFO';
+
+export const SET_LIVE_BUST_LIST = 'SET_LIVE_BUST_LIST';

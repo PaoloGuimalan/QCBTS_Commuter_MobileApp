@@ -4,6 +4,7 @@ import MapView, { Polygon, Polyline, Marker, Callout, Circle } from 'react-nativ
 import QCPath from '../../json/QCPath.json'
 import { locations } from '../../json/data'
 import BusStopIcon from '../../resources/OpenStop.png'
+import LiveBusIcon from '../../resources/livebus.png'
 import Axios from 'axios';
 import { URL } from '../../json/urlconfig'
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,6 +20,8 @@ const MainMap = () => {
   const selectedroute = useSelector(state => state.selectedroute)
   const currentlocation = useSelector(state => state.currentlocation)
   const selectedbusstop = useSelector(state => state.selectedbusstop);
+
+  const livebuslist = useSelector(state => state.livebuslist)
 
   const dispatch = useDispatch()
 
@@ -121,6 +124,23 @@ const MainMap = () => {
                     strokeWidth={3}
                 />
             ) : null}
+
+            {livebuslist.map((lv, i) => {
+                return(
+                    <Marker
+                        key={i}
+                        coordinate={{
+                            latitude: parseFloat(lv.latitude), 
+                            longitude: parseFloat(lv.longitude)
+                        }}
+                        style={{height: 30, width: 30}}
+                        onPress={() => {  }}
+                        >
+                        <Image source={LiveBusIcon} style={{height: 25, width: 25, borderColor: "lime", borderWidth: 2, borderRadius: 25}} />
+                    </Marker>
+                )
+            })}
+
             <Polygon
                 coordinates={locations}
                 strokeColor={"#ffbf00"}

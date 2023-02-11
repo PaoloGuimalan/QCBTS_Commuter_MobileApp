@@ -5,3 +5,5 @@
 // export const URL = 'https://qcbtsserver.onrender.com'
 export const URL = 'https://qcbtsserver.up.railway.app'
 // export const URL = 'http://192.168.5.227:3001';
+
+export const EXT_URL = 'https://transpotrackserver-production.up.railway.app'
