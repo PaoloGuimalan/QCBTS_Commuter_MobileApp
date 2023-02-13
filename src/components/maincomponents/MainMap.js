@@ -20,6 +20,7 @@ const MainMap = () => {
   const selectedroute = useSelector(state => state.selectedroute)
   const currentlocation = useSelector(state => state.currentlocation)
   const selectedbusstop = useSelector(state => state.selectedbusstop);
+  const liveroutelist = useSelector(state => state.liveroutelist)
 
   const livebuslist = useSelector(state => state.livebuslist)
 
@@ -38,6 +39,15 @@ const MainMap = () => {
 //         console.log(err.message)
 //     })
 //   }
+
+    function generateRandomColor(){
+        let maxVal = 0xFFFFFF; // 16777215
+        let randomNumber = Math.random() * maxVal; 
+        randomNumber = Math.floor(randomNumber);
+        randomNumber = randomNumber.toString(16);
+        let randColor = randomNumber.padStart(6, 0);   
+        return `#${randColor.toUpperCase()}`
+    }
 
   return (
     <View style={mainstyles.mainview}>
@@ -138,6 +148,17 @@ const MainMap = () => {
                         >
                         <Image source={LiveBusIcon} style={{height: 25, width: 25, borderColor: "lime", borderWidth: 2, borderRadius: 25}} />
                     </Marker>
+                )
+            })}
+
+            {liveroutelist.map((rt, i) => {
+                return(
+                    <Polyline
+                        key={i}
+                        coordinates={rt.routePath}
+                        strokeColor={"yellow"}
+                        strokeWidth={3}
+                    />
                 )
             })}
 

@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, ScrollView, Platform, ToastAndroid
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import MainMap from '../maincomponents/MainMap'
-import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_LIVE_BUST_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from '../../redux/types/types'
+import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from '../../redux/types/types'
 import Axios from 'axios'
 import { EXT_URL, URL } from '../../json/urlconfig'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -31,11 +31,64 @@ const Map = ({navigation}) => {
 
     useEffect(() => {
         initBusStopsList()
+        initRoutesList()
 
         return () => {
             dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: "" })
         }
     },[])
+
+    const renameKey = ( obj, oldKey, newKey, nextoldKey, nextNewKey ) => {
+        obj[nextNewKey] = obj[nextoldKey];
+        obj[newKey] = obj[oldKey];
+        delete obj[nextoldKey];
+        delete obj[oldKey];
+    }
+
+    const selectRoute = (data) => {
+        const arr = data.routePath;
+        arr.forEach(obj => renameKey(obj, 'lng', 'longitude', "lat", "latitude"))
+
+        var newData = {
+            ...data,
+            routePath: arr
+        }
+
+        return newData
+    }
+
+    const initRoutesList = async () => {
+        await AsyncStorage.getItem('token').then((resp) => {
+            if(resp != null){
+                Axios.get(`${URL}/commuters/publicroutes`, {
+                    headers: {
+                        "x-access-token": resp
+                    }
+                }).then((response) => {
+                    if(response.data.status){
+                        // dispatch({ type: SET_LIVE_ROUTE_LIST, liveroutelist: response.data.result })
+                        // console.log(response.data.result)
+                        var arrFinal = [];
+                        response.data.result.map((rt, i) => {
+                            if(response.data.result.length - 1 == i){
+                                arrFinal.push(selectRoute(rt))
+                                // console.log(i)
+                                dispatch({ type: SET_LIVE_ROUTE_LIST, liveroutelist: arrFinal })
+                            }
+                            else{
+                                arrFinal.push(selectRoute(rt))
+                            }
+                        })
+                    }
+                    else{
+                        console.log(response.data.message)
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                })
+            }
+        })
+    }
 
     const initBusStopsList = async () => {
         await AsyncStorage.getItem('token').then((resp) => {
