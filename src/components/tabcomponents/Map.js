@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, ScrollView, Platform, ToastAndroid
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import MainMap from '../maincomponents/MainMap'
-import { SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from '../../redux/types/types'
+import { SET_ASSIGNED_ROUTES_LIST, SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from '../../redux/types/types'
 import Axios from 'axios'
 import { EXT_URL, URL } from '../../json/urlconfig'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -24,6 +24,7 @@ const Map = ({navigation}) => {
     const currentlocation = useSelector(state => state.currentlocation);
     const selectedbusstop = useSelector(state => state.selectedbusstop);
     const waitingbusstop = useSelector(state => state.waitingbusstop)
+    const selectedlivebus = useSelector(state => state.selectedlivebus);
 
     const [toggleMapMenu, settoggleMapMenu] = useState(false)
 
@@ -32,6 +33,7 @@ const Map = ({navigation}) => {
     useEffect(() => {
         initBusStopsList()
         initRoutesList()
+        initAssignedRoutes()
 
         return () => {
             dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: "" })
@@ -79,6 +81,28 @@ const Map = ({navigation}) => {
                                 arrFinal.push(selectRoute(rt))
                             }
                         })
+                    }
+                    else{
+                        console.log(response.data.message)
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                })
+            }
+        })
+    }
+
+    const initAssignedRoutes = async () => {
+        await AsyncStorage.getItem('token').then((resp) => {
+            if(resp != null){
+                Axios.get(`${URL}/commuters/allassignedroutes`, {
+                    headers: {
+                        "x-access-token": resp
+                    }
+                }).then((response) => {
+                    if(response.data.status){
+                        // console.log(response.data.result)
+                        dispatch({ type: SET_ASSIGNED_ROUTES_LIST, assignedrouteslist: response.data.result })
                     }
                     else{
                         console.log(response.data.message)
@@ -218,12 +242,31 @@ const Map = ({navigation}) => {
         })
     }
 
+    var status = 0;
+
     useEffect(() => {
         var interval = setInterval(() => {
             Axios.get(`${EXT_URL}/liveData`).then((response) => {
                 var arrayData = Object.values(response.data)
+                var arrayDataLength = arrayData.filter((dt, i) => dt.userID == selectedlivebus.userID).length
                 // console.log(arrayData)
                 dispatch({type: SET_LIVE_BUST_LIST, livebuslist: arrayData})
+                // console.log(arrayDataLength)
+                if(arrayDataLength == 0){
+                    if(status == 0){
+                        status += 1
+                        dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { userID: "", companyID: "" } })
+                        if(selectedlivebus.userID != ""){
+                            if(Platform.OS == "android"){
+                                ToastAndroid.show("Bus went offline", ToastAndroid.SHORT)
+                            }
+                            else{
+                                alert("Bus went offline")
+                            }
+                        }
+                        // console.log(status, arrayDataLength)
+                    }
+                }
             }).catch((err) => {
                 console.log(err)
             })
@@ -231,8 +274,9 @@ const Map = ({navigation}) => {
 
         return () => {
             clearInterval(interval)
+            status = false;
         }
-    },[])
+    },[selectedlivebus])
 
     return (
      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
@@ -328,9 +372,28 @@ const Map = ({navigation}) => {
                             </View>
                         </View>
                     </View>
+                    {selectedlivebus.userID != ""? (
+                        <TouchableOpacity onPress={() => {  }} onLongPress={() => { dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { userID: "", companyID: "" } }) }} style={{width: "100%"}}>
+                            <View style={{backgroundColor: "#808080", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15}}>
+                                <Text style={{color: "#404040", fontSize: 13}}>Selected Bus:</Text>
+                                <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>...Bus ID...</Text>
+                                <Text style={{color: "#404040", fontSize: 13}}>...Company...</Text>
+                                <View style={{width: "100%", flexDirection: "row"}}>
+                                    <View style={{backgroundColor: "transparent", flexDirection: "column", justifyContent: "center", paddingTop: 10}}>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>...License...</Text>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>...Route...</Text>
+                                    </View>
+                                    <View style={{justifyContent: "center", alignItems: "flex-end", flex: 1, paddingTop: 5}}>
+                                        <MaterialComIcons name='bus' style={{fontSize: 25, color: "#404040"}} />
+                                    </View>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    ) : 
                     <View style={{backgroundColor: "#D3D3D3", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15, alignItems: "center"}}>
                         <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>No Bus Selected</Text>
                     </View>
+                    }
                     {selectedroute.routeID != null? (
                         <TouchableOpacity onPress={() => { navigation.navigate("RouteInfo", { id: selectedroute.routeID }) }} onLongPress={() => { dispatch({ type: SET_SELECTED_ROUTE, selectedroute: selectedroutestate }) }} style={{width: "100%"}}>
                             <View style={{backgroundColor: "#808080", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15}}>

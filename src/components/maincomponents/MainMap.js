@@ -8,7 +8,7 @@ import LiveBusIcon from '../../resources/livebus.png'
 import Axios from 'axios';
 import { URL } from '../../json/urlconfig'
 import { useDispatch, useSelector } from 'react-redux'
-import { SET_SELECTED_BUS_STOP } from '../../redux/types/types'
+import { SET_SELECTED_BUS_STOP, SET_SELECTED_LIVE_BUS } from '../../redux/types/types'
 
 const MainMap = () => {
 
@@ -21,6 +21,8 @@ const MainMap = () => {
   const currentlocation = useSelector(state => state.currentlocation)
   const selectedbusstop = useSelector(state => state.selectedbusstop);
   const liveroutelist = useSelector(state => state.liveroutelist)
+  const selectedlivebus = useSelector(state => state.selectedlivebus);
+  const assignedrouteslist = useSelector(state => state.assignedrouteslist)
 
   const livebuslist = useSelector(state => state.livebuslist)
 
@@ -144,23 +146,44 @@ const MainMap = () => {
                             longitude: parseFloat(lv.longitude)
                         }}
                         style={{height: 30, width: 30}}
-                        onPress={() => {  }}
+                        onPress={() => { dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { userID: lv.userID, companyID: lv.companyID } }) }}
                         >
                         <Image source={LiveBusIcon} style={{height: 25, width: 25, borderColor: "lime", borderWidth: 2, borderRadius: 25}} />
                     </Marker>
                 )
             })}
 
-            {liveroutelist.map((rt, i) => {
-                return(
-                    <Polyline
-                        key={i}
-                        coordinates={rt.routePath}
-                        strokeColor={"yellow"}
-                        strokeWidth={3}
-                    />
-                )
-            })}
+            {selectedlivebus.companyID != ""? (
+                liveroutelist.filter((lrt, a) => lrt.routeID == assignedrouteslist.filter((art, b) => art.companyID == selectedlivebus.companyID)[0].routeID).map((rt, i) => {
+                    return(
+                        <Polyline
+                            key={rt.routeID}
+                            coordinates={rt.routePath}
+                            strokeColor={"yellow"}
+                            strokeWidth={3}
+                        />
+                    )
+                })
+            ): null}
+
+            {/* {selectedlivebus.companyID != ""? (
+                assignedrouteslist.map((asrt, i) => {
+                    if(selectedlivebus.companyID == asrt.companyID){
+                        liveroutelist.map((rt, d) => {
+                            if(asrt.routeID == rt.routeID){
+                                return(
+                                    <Polyline
+                                        key={rt.routeID}
+                                        coordinates={rt.routePath}
+                                        strokeColor={"yellow"}
+                                        strokeWidth={3}
+                                    />
+                                )
+                            }
+                        })
+                    }
+                })
+            ) : null} */}
 
             <Polygon
                 coordinates={locations}

@@ -1,4 +1,4 @@
-import { SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LOCATION, SET_FEED_INFO, SET_FEED_LIST, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from "../types/types";
+import { SET_ASSIGNED_ROUTES_LIST, SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LOCATION, SET_FEED_INFO, SET_FEED_LIST, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from "../types/types";
 
 export const authdetailsstate = {
     auth: null,
@@ -172,6 +172,29 @@ export const setliveroutelist = (state = [], action) => {
     switch(action.type){
         case SET_LIVE_ROUTE_LIST:
             return action.liveroutelist;
+        default:
+            return state;
+    }
+}
+
+export const selectedlivebusstate = {
+    userID: "",
+    companyID: ""
+}
+
+export const setselectedlivebus = (state = selectedlivebusstate, action) => {
+    switch(action.type){
+        case SET_SELECTED_LIVE_BUS:
+            return action.selectedlivebus;
+        default:
+            return state;
+    }
+}
+
+export const setassignedrouteslist = (state = [], action) => {
+    switch(action.type){
+        case SET_ASSIGNED_ROUTES_LIST:
+            return action.assignedrouteslist;
         default:
             return state;
     }
