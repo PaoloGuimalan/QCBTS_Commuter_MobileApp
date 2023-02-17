@@ -146,7 +146,16 @@ const MainMap = () => {
                             longitude: parseFloat(lv.longitude)
                         }}
                         style={{height: 30, width: 30}}
-                        onPress={() => { dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { userID: lv.userID, companyID: lv.companyID } }) }}
+                        onPress={() => { dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { 
+                            userID: lv.userID,
+                            companyID: lv.companyID,
+                            busID: lv.busID,
+                            company: "",
+                            plateNumber: lv.plateNumber,
+                            route: liveroutelist.filter((lrt, a) => lrt.routeID == assignedrouteslist.filter((art, b) => art.companyID == lv.companyID)[0].routeID)[0].routeName
+                         } }) 
+                        //  console.log(liveroutelist.filter((lrt, a) => lrt.routeID == assignedrouteslist.filter((art, b) => art.companyID == lv.companyID)[0].routeID)[0].routeName)
+                        }}
                         >
                         <Image source={LiveBusIcon} style={{height: 25, width: 25, borderColor: "lime", borderWidth: 2, borderRadius: 25}} />
                     </Marker>

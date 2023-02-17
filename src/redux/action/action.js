@@ -179,7 +179,11 @@ export const setliveroutelist = (state = [], action) => {
 
 export const selectedlivebusstate = {
     userID: "",
-    companyID: ""
+    companyID: "",
+    busID: "",
+    company: "",
+    plateNumber: "",
+    route: ""
 }
 
 export const setselectedlivebus = (state = selectedlivebusstate, action) => {

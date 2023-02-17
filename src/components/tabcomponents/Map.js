@@ -13,7 +13,7 @@ import FontAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialComIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { selectedroutestate, waitingbusstopstate } from '../../redux/action/action'
+import { selectedlivebusstate, selectedroutestate, waitingbusstopstate } from '../../redux/action/action'
 
 const Map = ({navigation}) => {
   
@@ -373,15 +373,15 @@ const Map = ({navigation}) => {
                         </View>
                     </View>
                     {selectedlivebus.userID != ""? (
-                        <TouchableOpacity onPress={() => {  }} onLongPress={() => { dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { userID: "", companyID: "" } }) }} style={{width: "100%"}}>
+                        <TouchableOpacity onPress={() => {  }} onLongPress={() => { dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: selectedlivebusstate }) }} style={{width: "100%"}}>
                             <View style={{backgroundColor: "#808080", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15}}>
                                 <Text style={{color: "#404040", fontSize: 13}}>Selected Bus:</Text>
-                                <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>...Bus ID...</Text>
-                                <Text style={{color: "#404040", fontSize: 13}}>...Company...</Text>
+                                <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>{selectedlivebus.busID}</Text>
+                                <Text style={{color: "#404040", fontSize: 13}}>{selectedlivebus.company}</Text>
                                 <View style={{width: "100%", flexDirection: "row"}}>
                                     <View style={{backgroundColor: "transparent", flexDirection: "column", justifyContent: "center", paddingTop: 10}}>
-                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>...License...</Text>
-                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>...Route...</Text>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedlivebus.plateNumber}</Text>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedlivebus.route}</Text>
                                     </View>
                                     <View style={{justifyContent: "center", alignItems: "flex-end", flex: 1, paddingTop: 5}}>
                                         <MaterialComIcons name='bus' style={{fontSize: 25, color: "#404040"}} />
