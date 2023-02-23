@@ -152,7 +152,7 @@ const MainMap = () => {
                             busID: lv.busID,
                             company: "",
                             plateNumber: lv.plateNumber,
-                            route: liveroutelist.filter((lrt, a) => lrt.routeID == assignedrouteslist.filter((art, b) => art.companyID == lv.companyID)[0].routeID)[0].routeName
+                            route: lv.routeName
                          } }) 
                         //  console.log(liveroutelist.filter((lrt, a) => lrt.routeID == assignedrouteslist.filter((art, b) => art.companyID == lv.companyID)[0].routeID)[0].routeName)
                         }}

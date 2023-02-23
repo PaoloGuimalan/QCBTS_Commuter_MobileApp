@@ -6,18 +6,69 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { URL } from '../../json/urlconfig'
-import { SET_CURRENT_TAB, SET_ROUTES_LIST, SET_SELECTED_ROUTE } from '../../redux/types/types'
+import { EXT_URL, URL } from '../../json/urlconfig'
+import { SET_CURRENT_TAB, SET_LIVE_BUST_LIST, SET_ROUTES_LIST, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE } from '../../redux/types/types'
+import MaterialComIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Routes = ({navigation}) => {
   
     const authdetails = useSelector(state => state.authdetails)
     const routeslist = useSelector(state => state.routeslist);
+    const livebuslist = useSelector(state => state.livebuslist)
+    // const livebuslist = [
+    //     {
+    //         "_id": "63941134a56fb51ebb984788",
+    //         "userID": "driver_8642686",
+    //         "companyID": "company_907170",
+    //         "userType": "Driver",
+    //         "firstName": "Paolo",
+    //         "middleName": "N/A",
+    //         "lastName": "Guimalan",
+    //         "dlicense": "KJKSDHJKJAHS",
+    //         "status": false,
+    //         "locationSharing": true,
+    //         "__v": 0,
+    //         "busID": "BUS_3918347",
+    //         "driverID": "driver_8642686",
+    //         "busModel": "Medium Bus",
+    //         "plateNumber": "AHG276",
+    //         "capacity": "50",
+    //         "routeID": "RT_31487480",
+    //         "routeName": "Nova Rizal Route",
+    //         "privacy": true,
+    //         "latitude": "14.5948672",
+    //         "longitude": "121.0220544"
+    //     },
+    //     {
+    //         "_id": "63941134a56fb51ebb984788",
+    //         "userID": "driver_8642686",
+    //         "companyID": "company_907170",
+    //         "userType": "Driver",
+    //         "firstName": "Paolo",
+    //         "middleName": "N/A",
+    //         "lastName": "Guimalan",
+    //         "dlicense": "KJKSDHJKJAHS",
+    //         "status": false,
+    //         "locationSharing": true,
+    //         "__v": 0,
+    //         "busID": "BUS_3918347",
+    //         "driverID": "driver_8642686",
+    //         "busModel": "Medium Bus",
+    //         "plateNumber": "AHG276",
+    //         "capacity": "50",
+    //         "routeID": "RT_31487480",
+    //         "routeName": "Nova Rizal Route",
+    //         "privacy": true,
+    //         "latitude": "14.5948672",
+    //         "longitude": "121.0220544"
+    //     }
+    // ]
 
     const dispatch = useDispatch()
 
     useEffect(() => {
         initRoutesList()
+        initLiveBus()
     },[])
 
     const initRoutesList = async () => {
@@ -63,6 +114,17 @@ const Routes = ({navigation}) => {
         navigation.navigate("Map")
     }
 
+    const initLiveBus = () => {
+        Axios.get(`${EXT_URL}/liveData`).then((response) => {
+            var arrayData = Object.values(response.data)
+            // console.log(arrayData)
+            dispatch({type: SET_LIVE_BUST_LIST, livebuslist: arrayData})
+            // console.log(arrayDataLength)
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
     return (
         <View style={{flex: 1, justifyContent: "flex-start", alignItems: "center", backgroundColor: "white", flexDirection: "column"}}>
         <View style={{height: 180, backgroundColor: "#2B4273", width: "100%", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, justifyContent: "flex-end", alignItems: "center"}}>
@@ -74,10 +136,55 @@ const Routes = ({navigation}) => {
         <View style={{backgroundColor: "transparent", flex: 1, width: "100%"}}>
             <ScrollView style={{width: "100%", backgroundColor: "transparent"}} contentContainerStyle={{flexGrow: 1}}>
                 <View style={{backgroundColor: "transparent", justifyContent: "center", width: "100%", paddingLeft: 20, paddingRight: 20, paddingBottom: 15, paddingTop: 10}}>
-                    <Text style={{color: "#303030", fontSize: 17, marginTop: 10, fontWeight: "bold"}}>Buses</Text>
+                    <View style={{flex: 1, flexDirection: 'row', alignItems: "center", backgroundColor: "transparent", height: 40}}>
+                        <Text style={{color: "#303030", fontSize: 17, marginTop: 0, fontWeight: "bold"}}>Buses</Text>
+                        <TouchableOpacity onPress={() => { initLiveBus() }} style={{backgroundColor: "transparent", marginLeft: 10}}>
+                            <MaterialComIcons name='reload' style={{fontSize: 25, color: "#404040"}} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, flex: 1, flexDirection: "row"}}>
+                        {livebuslist.length == 0? (
+                            <View style={{width: "100%", height: 170, backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+                                <MaterialComIcons name='bus-alert' style={{fontSize: 80, color: "#808080"}} />
+                            </View>
+                        ) : (
+                            livebuslist.map((bss, i) => {
+                                return(
+                                    <TouchableOpacity key={i} onPress={() => {
+                                        dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { 
+                                            userID: bss.userID,
+                                            companyID: bss.companyID,
+                                            busID: bss.busID,
+                                            company: "",
+                                            plateNumber: bss.plateNumber,
+                                            route: bss.routeName
+                                        }})
+                                        setTimeout(() => {
+                                            navigation.navigate("Map")
+                                        },500)
+                                    }} style={{backgroundColor: "transparent", width: 120, margin: 5, height: 120, borderRadius: 5}}>
+                                        <View style={{flex: 1, width: "100%", height: "100%", backgroundColor: "#808080", borderRadius: 10, flexDirection: "column", justifyContent: "flex-end", alignItems: "center"}}>
+                                            <MaterialComIcons name='bus' style={{fontSize: 50, color: "#404040"}} />
+                                            <View style={{backgroundColor: "transparent", width: "100%", height: 50}}>
+                                                <View style={{backgroundColor: "transparent", flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+                                                    <Text style={{fontSize: 13, fontWeight: "bold"}}>{bss.busID}</Text>
+                                                    <Text style={{fontSize: 12}}>{bss.routeName}</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        )}
+                    </View>
                 </View>
                 <View style={{backgroundColor: "transparent", justifyContent: "center", width: "100%", paddingLeft: 20, paddingRight: 20, paddingBottom: 15, paddingTop: 10}}>
-                    <Text style={{color: "#303030", fontSize: 17, marginTop: 10, fontWeight: "bold"}}>Routes</Text>
+                    <View style={{flex: 1, flexDirection: 'row', alignItems: "center", backgroundColor: "transparent", height: 40}}>
+                        <Text style={{color: "#303030", fontSize: 17, marginTop: 0, fontWeight: "bold"}}>Routes</Text>
+                        <TouchableOpacity onPress={() => { initRoutesList() }} style={{backgroundColor: "transparent", marginLeft: 10}}>
+                            <MaterialComIcons name='reload' style={{fontSize: 25, color: "#404040"}} />
+                        </TouchableOpacity>
+                    </View>
                     <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10}}>
                         {routeslist.map((data, i) => {
                             return(
