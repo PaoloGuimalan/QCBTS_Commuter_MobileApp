@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from "redux";
-import { setassignedrouteslist, setauthdetails, setbusstopslist, setcurrentlocation, setcurrenttab, setenablelocation, setfeedinfo, setfeedlist, setlivebuslist, setliveroutelist, setprofiledetails, setrouteslist, setselectedbusstop, setselectedlivebus, setselectedroute, setwaitingbusstop } from "../action/action";
+import { setassignedrouteslist, setauthdetails, setbusstopslist, setcurrentlocation, setcurrenttab, setenablelocation, setfeedinfo, setfeedlist, setinitialmaptrigger, setlivebuslist, setliveroutelist, setprofiledetails, setrouteslist, setsearchresultlist, setselectedbusstop, setselectedlivebus, setselectedroute, setwaitingbusstop } from "../action/action";
 
 const combiner = combineReducers({
     authdetails: setauthdetails,
@@ -17,7 +17,9 @@ const combiner = combineReducers({
     livebuslist: setlivebuslist,
     liveroutelist: setliveroutelist,
     selectedlivebus: setselectedlivebus,
-    assignedrouteslist: setassignedrouteslist
+    assignedrouteslist: setassignedrouteslist,
+    searchresultlist: setsearchresultlist,
+    initialmaptrigger: setinitialmaptrigger
 })
 
 const store = createStore(combiner);

@@ -23,6 +23,7 @@ const MainMap = () => {
   const liveroutelist = useSelector(state => state.liveroutelist)
   const selectedlivebus = useSelector(state => state.selectedlivebus);
   const assignedrouteslist = useSelector(state => state.assignedrouteslist)
+  const initialmaptrigger = useSelector(state => state.initialmaptrigger);
 
   const livebuslist = useSelector(state => state.livebuslist)
 
@@ -30,7 +31,12 @@ const MainMap = () => {
 
   useEffect(() => {
     // initEnabledBusStops()
-  },[])
+    // console.log("Hello")
+
+    return () => {
+        // console.log("World")
+    }
+  },[initialmaptrigger])
 
 //   const initEnabledBusStops = () => {
 //     Axios.get(`${URL}/company/enabledBusStops`).then((response) => {
@@ -56,7 +62,14 @@ const MainMap = () => {
         <MapView
             onRegionChange={function(){return;}}
             style={mainstyles.map}
-            initialRegion={selectedroute.routeID != null? {
+            initialRegion={initialmaptrigger == "none"? {
+                latitude: 14.647296,
+                longitude: 121.061376,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
+            } : 
+            initialmaptrigger == "route"? 
+            selectedroute.routeID != null? {
                 ...selectedroute.routePath[0],
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421
@@ -66,7 +79,39 @@ const MainMap = () => {
                 longitude: 121.061376,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421
-            }}
+            } : 
+            initialmaptrigger == "busstop"? 
+            selectedbusstop.busStopID != ""? {
+                latitude: selectedbusstop.latitude,
+                longitude: selectedbusstop.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
+
+            } : {
+                latitude: 14.647296,
+                longitude: 121.061376,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
+            } : 
+            initialmaptrigger == "livebus"?
+            selectedlivebus.userID != ""? {
+                latitude: parseFloat(selectedlivebus.latitude),
+                longitude: parseFloat(selectedlivebus.longitude),
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
+
+            } : {
+                latitude: 14.647296,
+                longitude: 121.061376,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
+            } : {
+                latitude: 14.647296,
+                longitude: 121.061376,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
+            }
+            }
             minZoomLevel={12}
             mapType={'satellite'}
         >
@@ -80,9 +125,13 @@ const MainMap = () => {
                                 longitude: parseFloat(stops.coordinates.longitude)
                             }}
                             style={{height: 30, width: 30}}
-                            onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: stops.busStopID }) }}
+                            onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: {
+                                busStopID: stops.busStopID,
+                                longitude: parseFloat(stops.coordinates.longitude),
+                                latitude: parseFloat(stops.coordinates.latitude)
+                            } }) }}
                         >
-                            <Image source={BusStopIcon} style={{height: 25, width: 25, borderColor: selectedbusstop == stops.busStopID? "lime" : "#ffbf00", borderWidth: 2, borderRadius: 25}} />
+                            <Image source={BusStopIcon} style={{height: 25, width: 25, borderColor: selectedbusstop.busStopID == stops.busStopID? "lime" : "#ffbf00", borderWidth: 2, borderRadius: 25}} />
                         </Marker>
                     )
                 })
@@ -99,7 +148,7 @@ const MainMap = () => {
                             radius={50}
                             fillColor="transparent"
                             strokeWidth={2}
-                            strokeColor={selectedbusstop == stops.busStopID? "lime" : "orange"}
+                            strokeColor={selectedbusstop.busStopID == stops.busStopID? "lime" : "orange"}
                         >
                         </Circle>
                     )

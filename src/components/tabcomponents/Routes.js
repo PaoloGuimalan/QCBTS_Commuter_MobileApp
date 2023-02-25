@@ -7,7 +7,7 @@ import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { EXT_URL, URL } from '../../json/urlconfig'
-import { SET_CURRENT_TAB, SET_LIVE_BUST_LIST, SET_ROUTES_LIST, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE } from '../../redux/types/types'
+import { SET_CURRENT_TAB, SET_INITIAL_MAP_TRIGGER, SET_LIVE_BUST_LIST, SET_ROUTES_LIST, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE } from '../../redux/types/types'
 import MaterialComIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Routes = ({navigation}) => {
@@ -66,12 +66,16 @@ const Routes = ({navigation}) => {
 
     const dispatch = useDispatch()
 
+    const [routeloadingStatus, setrouteloadingStatus] = useState(true);
+    const [busesloadingStatus, setbusesloadingStatus] = useState(true)
+
     useEffect(() => {
         initRoutesList()
         initLiveBus()
     },[])
 
     const initRoutesList = async () => {
+        setrouteloadingStatus(true)
         await AsyncStorage.getItem('token').then((resp) => {
             if(resp != null){
                 Axios.get(`${URL}/commuters/publicroutes`, {
@@ -86,8 +90,10 @@ const Routes = ({navigation}) => {
                     else{
                         console.log(response.data.message)
                     }
+                    setrouteloadingStatus(false)
                 }).catch((err) => {
                     console.log(err)
+                    setrouteloadingStatus(false)
                 })
             }
         })
@@ -102,26 +108,47 @@ const Routes = ({navigation}) => {
 
     const selectRoute = (data) => {
         const arr = data.routePath;
-        arr.forEach(obj => renameKey(obj, 'lng', 'longitude', "lat", "latitude"))
+        if(arr[0].hasOwnProperty("lng") && arr[0].hasOwnProperty("lat")){
+            arr.forEach(obj => renameKey(obj, 'lng', 'longitude', "lat", "latitude"))
 
-        var newData = {
-            ...data,
-            routePath: arr
+            var newData = {
+                ...data,
+                routePath: arr
+            }
+
+            dispatch({ type: SET_INITIAL_MAP_TRIGGER, initialmaptrigger: "route" })
+            dispatch({ type: SET_SELECTED_ROUTE, selectedroute: newData })
+            dispatch({ type: SET_CURRENT_TAB, currenttab: "Map" })
+            setTimeout(() => {
+                navigation.navigate("Map")
+            },500)
         }
+        else{
+            var newData = {
+                ...data,
+                routePath: arr
+            }
 
-        dispatch({ type: SET_SELECTED_ROUTE, selectedroute: newData })
-        dispatch({ type: SET_CURRENT_TAB, currenttab: "Map" })
-        navigation.navigate("Map")
+            dispatch({ type: SET_INITIAL_MAP_TRIGGER, initialmaptrigger: "route" })
+            dispatch({ type: SET_SELECTED_ROUTE, selectedroute: newData })
+            dispatch({ type: SET_CURRENT_TAB, currenttab: "Map" })
+            setTimeout(() => {
+                navigation.navigate("Map")
+            },500)
+        }
     }
 
     const initLiveBus = () => {
+        setbusesloadingStatus(true)
         Axios.get(`${EXT_URL}/liveData`).then((response) => {
             var arrayData = Object.values(response.data)
             // console.log(arrayData)
             dispatch({type: SET_LIVE_BUST_LIST, livebuslist: arrayData})
+            setbusesloadingStatus(false)
             // console.log(arrayDataLength)
         }).catch((err) => {
             console.log(err)
+            setbusesloadingStatus(false)
         })
     }
 
@@ -142,39 +169,49 @@ const Routes = ({navigation}) => {
                             <MaterialComIcons name='reload' style={{fontSize: 25, color: "#404040"}} />
                         </TouchableOpacity>
                     </View>
-                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, flex: 1, flexDirection: "row"}}>
-                        {livebuslist.length == 0? (
+                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, flex: 1, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-around"}}>
+                        {busesloadingStatus? (
                             <View style={{width: "100%", height: 170, backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
-                                <MaterialComIcons name='bus-alert' style={{fontSize: 80, color: "#808080"}} />
+                                <Text style={{color: "#787878", fontSize: 13, marginTop: 10}}>Loading...</Text>
                             </View>
                         ) : (
-                            livebuslist.map((bss, i) => {
-                                return(
-                                    <TouchableOpacity key={i} onPress={() => {
-                                        dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { 
-                                            userID: bss.userID,
-                                            companyID: bss.companyID,
-                                            busID: bss.busID,
-                                            company: "",
-                                            plateNumber: bss.plateNumber,
-                                            route: bss.routeName
-                                        }})
-                                        setTimeout(() => {
-                                            navigation.navigate("Map")
-                                        },500)
-                                    }} style={{backgroundColor: "transparent", width: 120, margin: 5, height: 120, borderRadius: 5}}>
-                                        <View style={{flex: 1, width: "100%", height: "100%", backgroundColor: "#808080", borderRadius: 10, flexDirection: "column", justifyContent: "flex-end", alignItems: "center"}}>
-                                            <MaterialComIcons name='bus' style={{fontSize: 50, color: "#404040"}} />
-                                            <View style={{backgroundColor: "transparent", width: "100%", height: 50}}>
-                                                <View style={{backgroundColor: "transparent", flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-                                                    <Text style={{fontSize: 13, fontWeight: "bold"}}>{bss.busID}</Text>
-                                                    <Text style={{fontSize: 12}}>{bss.routeName}</Text>
+                            livebuslist.length == 0? (
+                                <View style={{width: "100%", height: 170, backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+                                    <MaterialComIcons name='bus-alert' style={{fontSize: 80, color: "#808080"}} />
+                                </View>
+                            ) : (
+                                livebuslist.map((bss, i) => {
+                                    return(
+                                        <TouchableOpacity key={i} onPress={() => {
+                                            dispatch({ type: SET_INITIAL_MAP_TRIGGER, initialmaptrigger: "livebus" })
+                                            dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { 
+                                                userID: bss.userID,
+                                                companyID: bss.companyID,
+                                                busID: bss.busID,
+                                                companyID: bss.companyID,
+                                                plateNumber: bss.plateNumber,
+                                                route: bss.routeName,
+                                                latitude: parseFloat(bss.latitude),
+                                                longitude: parseFloat(bss.longitude)
+                                            }})
+                                            dispatch({ type: SET_CURRENT_TAB, currenttab: "Map" })
+                                            setTimeout(() => {
+                                                navigation.navigate("Map")
+                                            },500)
+                                        }} style={{backgroundColor: "transparent", width: 120, margin: 5, height: 120, borderRadius: 5}}>
+                                            <View style={{flex: 1, width: "100%", height: "100%", backgroundColor: "#808080", borderRadius: 10, flexDirection: "column", justifyContent: "flex-end", alignItems: "center"}}>
+                                                <MaterialComIcons name='bus' style={{fontSize: 50, color: "#404040"}} />
+                                                <View style={{backgroundColor: "transparent", width: "100%", height: 50}}>
+                                                    <View style={{backgroundColor: "transparent", flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+                                                        <Text style={{fontSize: 13, fontWeight: "bold"}}>{bss.busID}</Text>
+                                                        <Text style={{fontSize: 12, textAlign: "center", width: "90%"}} numberOfLines={2}>{bss.routeName}</Text>
+                                                    </View>
                                                 </View>
                                             </View>
-                                        </View>
-                                    </TouchableOpacity>
-                                )
-                            })
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            )
                         )}
                     </View>
                 </View>
@@ -186,28 +223,34 @@ const Routes = ({navigation}) => {
                         </TouchableOpacity>
                     </View>
                     <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10}}>
-                        {routeslist.map((data, i) => {
-                            return(
-                                <TouchableOpacity onLongPress={() => { navigation.navigate("RouteInfo", { id: data.routeID }) }} onPress={() => { selectRoute(data) }} key={data.routeID} style={{width: "100%", backgroundColor: 'transparent', borderWidth: 1, borderColor: "#808080", height: 65, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
-                                    <View style={{width: "100%"}}>
-                                        <Text style={{color: "#808080", fontSize: 13}}>{data.routeID}</Text>
-                                    </View>
-                                    <View style={{width: "100%", flexDirection: "row", alignItems: 'center'}}>
-                                        <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>{data.routeName}</Text>
-                                        <View style={{flex: 1, justifyContent: "center", alignItems: "flex-end"}}>
-                                            <View style={{flexDirection: "row"}}>
-                                                <Text style={{color: "#808080", fontSize: 13}}>from </Text>
-                                                <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{data.stationList[0].stationName}</Text>
-                                            </View>
-                                            <View style={{flexDirection: "row"}}>
-                                                <Text style={{color: "#808080", fontSize: 13}}>to </Text>
-                                                <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{data.stationList[data.stationList.length - 1].stationName}</Text>
+                        {routeloadingStatus? (
+                            <View style={{width: "100%", height: 170, backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+                                <Text style={{color: "#787878", fontSize: 13, marginTop: 10}}>Loading...</Text>
+                            </View>
+                        ) : (
+                            routeslist.map((data, i) => {
+                                return(
+                                    <TouchableOpacity onLongPress={() => { navigation.navigate("RouteInfo", { id: data.routeID }) }} onPress={() => { selectRoute(data) }} key={data.routeID} style={{width: "100%", backgroundColor: 'transparent', borderWidth: 1, borderColor: "#808080", height: 65, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
+                                        <View style={{width: "100%"}}>
+                                            <Text style={{color: "#808080", fontSize: 13}}>{data.routeID}</Text>
+                                        </View>
+                                        <View style={{width: "100%", flexDirection: "row", alignItems: 'center'}}>
+                                            <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>{data.routeName}</Text>
+                                            <View style={{flex: 1, justifyContent: "center", alignItems: "flex-end"}}>
+                                                <View style={{flexDirection: "row"}}>
+                                                    <Text style={{color: "#808080", fontSize: 13}}>from </Text>
+                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{data.stationList[0].stationName}</Text>
+                                                </View>
+                                                <View style={{flexDirection: "row"}}>
+                                                    <Text style={{color: "#808080", fontSize: 13}}>to </Text>
+                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{data.stationList[data.stationList.length - 1].stationName}</Text>
+                                                </View>
                                             </View>
                                         </View>
-                                    </View>
-                                </TouchableOpacity>
-                            )
-                        })}
+                                    </TouchableOpacity>
+                                )
+                            })
+                        )}
                     </View>
                 </View>
             </ScrollView>

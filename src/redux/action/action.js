@@ -1,4 +1,4 @@
-import { SET_ASSIGNED_ROUTES_LIST, SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LOCATION, SET_FEED_INFO, SET_FEED_LIST, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from "../types/types";
+import { SET_ASSIGNED_ROUTES_LIST, SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LOCATION, SET_FEED_INFO, SET_FEED_LIST, SET_INITIAL_MAP_TRIGGER, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SEARCH_RESULT_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from "../types/types";
 
 export const authdetailsstate = {
     auth: null,
@@ -105,7 +105,13 @@ export const setcurrentlocation = (state = currentlocationstate, action) => {
     }
 }
 
-export const setselectedbusstop = (state = "", action) => {
+export const selectedbusstopstate = {
+    busStopID: "",
+    longitude: "",
+    latitude: ""
+}
+
+export const setselectedbusstop = (state = selectedbusstopstate, action) => {
     switch(action.type){
         case SET_SELECTED_BUS_STOP:
             return action.selectedbusstop;
@@ -183,7 +189,9 @@ export const selectedlivebusstate = {
     busID: "",
     company: "",
     plateNumber: "",
-    route: ""
+    route: "",
+    latitude: "",
+    longitude: ""
 }
 
 export const setselectedlivebus = (state = selectedlivebusstate, action) => {
@@ -199,6 +207,30 @@ export const setassignedrouteslist = (state = [], action) => {
     switch(action.type){
         case SET_ASSIGNED_ROUTES_LIST:
             return action.assignedrouteslist;
+        default:
+            return state;
+    }
+}
+
+export const searchresultliststate = {
+    Buses: [],
+    BusStops: [],
+    Routes: []
+}
+
+export const setsearchresultlist = (state = searchresultliststate, action) => {
+    switch(action.type){
+        case SET_SEARCH_RESULT_LIST:
+            return action.searchresultlist;
+        default:
+            return state;
+    }
+}
+
+export const setinitialmaptrigger = (state = "none", action) => {
+    switch(action.type){
+        case SET_INITIAL_MAP_TRIGGER:
+            return action.initialmaptrigger;
         default:
             return state;
     }
