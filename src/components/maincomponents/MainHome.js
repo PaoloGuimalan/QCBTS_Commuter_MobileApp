@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { URL } from '../../json/urlconfig'
 import Axios from 'axios'
 import { waitingbusstopstate } from '../../redux/action/action'
+import BusInfo from './BusInfo'
 
 const BodyStack = createNativeStackNavigator()
 
@@ -193,6 +194,7 @@ const MainHome = ({navigation}) => {
         <BodyStack.Screen name='FeedInfo' component={FeedInfo} options={{headerShown: false, animation: "slide_from_right"}} />
         <BodyStack.Screen name='RouteInfo' component={RouteInfo} options={{headerShown: false, animation: "slide_from_right"}} />
         <BodyStack.Screen name='BusStopInfo' component={BusStopInfo} options={{headerShown: false, animation: "slide_from_right"}} />
+        <BodyStack.Screen name='BusInfo' component={BusInfo} options={{headerShown: false, animation: "slide_from_right"}} />
     </BodyStack.Navigator>
   )
 }

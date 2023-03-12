@@ -245,36 +245,82 @@ const Map = ({navigation}) => {
     var status = 0;
 
     useEffect(() => {
-        var interval = setInterval(() => {
-            Axios.get(`${EXT_URL}/liveData`).then((response) => {
-                var arrayData = Object.values(response.data)
-                var arrayDataLength = arrayData.filter((dt, i) => dt.userID == selectedlivebus.userID).length
-                // console.log(arrayData)
-                dispatch({type: SET_LIVE_BUST_LIST, livebuslist: arrayData})
-                // console.log(arrayDataLength)
-                if(arrayDataLength == 0){
-                    if(status == 0){
-                        status += 1
-                        dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { userID: "", companyID: "" } })
-                        if(selectedlivebus.userID != ""){
-                            if(Platform.OS == "android"){
-                                ToastAndroid.show("Bus went offline", ToastAndroid.SHORT)
-                            }
-                            else{
-                                alert("Bus went offline")
-                            }
+        // var interval = setInterval(() => {
+        //     Axios.get(`${EXT_URL}/liveData`).then((response) => {
+        //         var arrayData = Object.values(response.data)
+        //         var arrayDataLength = arrayData.filter((dt, i) => dt.userID == selectedlivebus.userID).length
+        //         // console.log(arrayData)
+        //         dispatch({type: SET_LIVE_BUST_LIST, livebuslist: arrayData})
+        //         // console.log(arrayDataLength)
+        //         if(arrayDataLength == 0){
+        //             if(status == 0){
+        //                 status += 1
+        //                 dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: { userID: "", companyID: "" } })
+        //                 if(selectedlivebus.userID != ""){
+        //                     if(Platform.OS == "android"){
+        //                         ToastAndroid.show("Bus went offline", ToastAndroid.SHORT)
+        //                     }
+        //                     else{
+        //                         alert("Bus went offline")
+        //                     }
+        //                 }
+        //                 // console.log(status, arrayDataLength)
+        //             }
+        //         }
+        //     }).catch((err) => {
+        //         console.log(err)
+        //     })
+        // },2000)
+
+        // return () => {
+        //     clearInterval(interval)
+        //     status = false;
+        // }
+    },[selectedlivebus])
+
+    var pollingLiveBus = () => {
+        Axios.get(`${EXT_URL}/liveData`).then((response) => {
+            var arrayData = Object.values(response.data)
+            // var arrayDataLength1 = arrayData.filter((dt, i) => dt.userID == selectedlivebus.userID)
+            var arrayDataLength = arrayData.filter((dt, i) => dt.userID == selectedlivebus.userID).length
+            // console.log("ARRAY DATA", arrayData)
+            dispatch({type: SET_LIVE_BUST_LIST, livebuslist: arrayData})
+            // console.log(arrayDataLength1)
+            if(arrayDataLength == 0){
+                    // console.log(selectedlivebus.userID)
+                    if(selectedlivebus.userID != ""){
+                        dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: selectedlivebusstate })
+                        if(Platform.OS == "android"){
+                            ToastAndroid.show("Bus went offline", ToastAndroid.SHORT)
                         }
-                        // console.log(status, arrayDataLength)
+                        else{
+                            alert("Bus went offline")
+                        }
                     }
-                }
-            }).catch((err) => {
-                console.log(err)
-            })
-        },2000)
+            }
+            else{
+                // console.log("ARRAY DATA LENGTH NOT ZERO")
+                status = 0
+            }
+
+            // console.log(status, arrayDataLength)
+
+            setTimeout(() => {
+                pollingLiveBus()
+            }, 2000)
+        }).catch((err) => {
+            console.log(err)
+            setTimeout(() => {
+                pollingLiveBus()
+            }, 2000)
+        })
+    }
+
+    useEffect(() => {
+        pollingLiveBus()
 
         return () => {
-            clearInterval(interval)
-            status = false;
+            pollingLiveBus = () => {  }
         }
     },[selectedlivebus])
 
@@ -290,14 +336,14 @@ const Map = ({navigation}) => {
                 </View>
                 <AntDesignIcon name={toggleMapMenu? 'down' : 'up'} style={{ color: "black", fontSize: 20 }} />
             </TouchableOpacity>
-            <ScrollView style={{width: "100%"}} contentContainerStyle={{flexGrow: 1}} fadingEdgeLength={5}>
+            <ScrollView nestedScrollEnabled={true} style={{width: "100%"}} contentContainerStyle={{flexGrow: 1}} fadingEdgeLength={5}>
                 <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10}}>
                     <View style={{width: "100%", backgroundColor: "transparent", flexDirection: "row"}}>
                         <View style={{width: "70%", paddingRight: 10}}>
                             <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 30}}>Stations Nearby</Text>
                             {currentlocation.status? (
                                 <View style={{backgroundColor: "#D3D3D3", height: 100, borderRadius: 10, overflow: "hidden"}}>
-                                    <ScrollView style={{backgroundColor: "#D3D3D3", height: "100%", width: "100%", borderRadius: 10}} contentContainerStyle={{flexGrow: 1}}>
+                                    <ScrollView nestedScrollEnabled={true} style={{backgroundColor: "#D3D3D3", height: "100%", width: "100%", borderRadius: 10}} contentContainerStyle={{flexGrow: 1}}>
                                         {busstopslist.map((stops, i) => {
                                             if(stops.busStopID == waitingbusstop.busStopID){
                                                 return(
@@ -305,7 +351,7 @@ const Map = ({navigation}) => {
                                                         busStopID: stops.busStopID,
                                                         longitude: parseFloat(stops.coordinates.longitude),
                                                         latitude: parseFloat(stops.coordinates.latitude)
-                                                    } }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "orange", height: 100, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 2, marginTop: 2, flexDirection: "column"}}>
+                                                    } }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "orange", height: 100, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 4, marginTop: 0, flexDirection: "column"}}>
                                                             <View style={{width: "100%", height: '100%', justifyContent: 'flex-start', alignItems: 'center', flexDirection: "row", paddingLeft: 10, paddingRight: 10}}>
                                                                 <MaterialComIcons name='bus-stop-covered' style={{fontSize: 30, color: "white"}} />
                                                                 <View style={{flex: 1, backgroundColor: "transparent", height: "100%", flexDirection: "column", paddingLeft: 10, justifyContent: "center"}}>
@@ -331,7 +377,7 @@ const Map = ({navigation}) => {
                                                                 busStopID: stops.busStopID,
                                                                 longitude: parseFloat(stops.coordinates.longitude),
                                                                 latitude: parseFloat(stops.coordinates.latitude)
-                                                            } }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "#808080", height: selectedbusstop.busStopID == stops.busStopID? 100 : 70, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 2, marginTop: 2, flexDirection: "column"}}>
+                                                            } }) }} onLongPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "#808080", height: selectedbusstop.busStopID == stops.busStopID? 100 : 70, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 4, marginTop: 0, flexDirection: "column"}}>
                                                                 <View style={{width: "100%", height: '100%', justifyContent: 'flex-start', alignItems: 'center', flexDirection: "row", paddingLeft: 10, paddingRight: 10}}>
                                                                     <MaterialComIcons name='bus-stop-covered' style={{fontSize: 30, color: "white"}} />
                                                                     <View style={{flex: 1, backgroundColor: "transparent", height: "100%", flexDirection: "column", paddingLeft: 10, justifyContent: "center"}}>
@@ -391,8 +437,11 @@ const Map = ({navigation}) => {
                                         <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedlivebus.plateNumber}</Text>
                                         <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedlivebus.route}</Text>
                                     </View>
-                                    <View style={{justifyContent: "center", alignItems: "flex-end", flex: 1, paddingTop: 5}}>
+                                    <View style={{justifyContent: "space-around", alignItems: "flex-end", flex: 1, paddingTop: 0}}>
                                         <MaterialComIcons name='bus' style={{fontSize: 25, color: "#404040"}} />
+                                        <TouchableOpacity onPress={() => { navigation.navigate("BusInfo", { bus: { driverID: selectedlivebus.userID, companyID: selectedlivebus.companyID, busID: selectedlivebus.busID, routeID: selectedlivebus.routeID } }) }} style={{backgroundColor: "white", width: 60, height: 23, justifyContent: "center", alignItems: 'center', borderRadius: 5, marginTop: 10}}>
+                                            <Text style={{color: "#404040", fontSize: 13}}>Bus Info</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                             </View>

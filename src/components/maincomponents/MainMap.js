@@ -201,12 +201,13 @@ const MainMap = () => {
                             busID: lv.busID,
                             company: "",
                             plateNumber: lv.plateNumber,
-                            route: lv.routeName
+                            route: lv.routeName,
+                            routeID: lv.routeID
                          } }) 
                         //  console.log(liveroutelist.filter((lrt, a) => lrt.routeID == assignedrouteslist.filter((art, b) => art.companyID == lv.companyID)[0].routeID)[0].routeName)
                         }}
                         >
-                        <Image source={LiveBusIcon} style={{height: 25, width: 25, borderColor: "lime", borderWidth: 2, borderRadius: 25}} />
+                        <Image source={LiveBusIcon} style={{height: 25, width: 25, borderColor: "#ff914d", borderWidth: 2, borderRadius: 25}} />
                     </Marker>
                 )
             })}
