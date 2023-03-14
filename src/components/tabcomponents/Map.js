@@ -451,6 +451,39 @@ const Map = ({navigation}) => {
                         <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>No Bus Selected</Text>
                     </View>
                     }
+                    {selectedbusstop.busStopID != ""? (
+                        busstopslist.map((stops, i) => {
+                                if(stops.busStopID == selectedbusstop.busStopID){
+                                    return(
+                                        <TouchableOpacity onLongPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: selectedbusstopstate}) }} onPress={() => { navigation.navigate("BusStopInfo", { id: stops.busStopID }) }} key={i} style={{backgroundColor: "#808080", height: selectedbusstop.busStopID == stops.busStopID? 100 : 70, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 0, marginTop: 15, flexDirection: "column"}}>
+                                            <View style={{width: "100%", height: '100%', justifyContent: 'flex-start', alignItems: 'center', flexDirection: "row", paddingLeft: 10, paddingRight: 10}}>
+                                                <MaterialComIcons name='bus-stop-covered' style={{fontSize: 30, color: "white"}} />
+                                                <View style={{flex: 1, backgroundColor: "transparent", height: "100%", flexDirection: "column", paddingLeft: 10, justifyContent: "center"}}>
+                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.busStopID}</Text>
+                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.stationName}</Text>
+                                                    {/* {selectedbusstop.busStopID == stops.busStopID? (
+                                                        <View style={{paddingTop: 10, flexDirection: "row"}}>
+                                                            <TouchableOpacity onPress={() => { markasWaiting(stops.busStopID) }} style={{backgroundColor: "orange", width: 50, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5, marginRight: 5}}>
+                                                                <Text style={{fontSize: 13, color: "white"}}>Wait</Text>
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity onPress={() => { dispatch({ type: SET_SELECTED_BUS_STOP, selectedbusstop: selectedbusstopstate }) }} style={{backgroundColor: "red", width: 50, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5}}>
+                                                                <Text style={{fontSize: 13, color: "white"}}>Close</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    ) : (
+                                                        <View></View>
+                                                    )} */}
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                        )
+                                }
+                        })
+                    ) : 
+                    <View style={{backgroundColor: "#D3D3D3", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15, alignItems: "center"}}>
+                        <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>No Station Selected</Text>
+                    </View>
+                    }
                     {selectedroute.routeID != null? (
                         <TouchableOpacity onPress={() => { navigation.navigate("RouteInfo", { id: selectedroute.routeID }) }} onLongPress={() => { dispatch({ type: SET_INITIAL_MAP_TRIGGER, initialmaptrigger: "none" }); dispatch({ type: SET_SELECTED_ROUTE, selectedroute: selectedroutestate }) }} style={{width: "100%"}}>
                             <View style={{backgroundColor: "#808080", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15}}>

@@ -15,48 +15,69 @@ const Register = ({navigation}) => {
   const [password, setpassword] = useState("");
   const [confpassword, setconfpassword] = useState("");
 
+  const [loadingButton, setloadingButton] = useState(false);
+
   const signuprequest = () => {
     if(checkedBox){
       if(password.split(" ") != "" && confpassword.split(" ") != ""){
         if(password == confpassword){
-          Axios.post(`${URL}/auth/registercommuter`,{
-            name: regname,
-            email: email,
-            contactnumber: contactnumber,
-            password: password
-          }).then((response) => {
-            if(response.data.status){
-              // console.log("Reg OK")
-              if(Platform.OS == "android"){
-                ToastAndroid.show("Successfully Registered", ToastAndroid.SHORT)
+          if(regname != "" && email != "" && contactnumber != ""){
+            setloadingButton(true)
+            Axios.post(`${URL}/auth/registercommuter`,{
+              name: regname,
+              email: email,
+              contactnumber: contactnumber,
+              password: password
+            }).then((response) => {
+              setloadingButton(false)
+              if(response.data.status){
+                // console.log("Reg OK")
+                if(Platform.OS == "android"){
+                  ToastAndroid.show("Successfully Registered", ToastAndroid.SHORT)
+                }
+                else{
+                  alert("Successfully Registered")
+                }
+  
+                setcheckedBox(false)
+                setregname("")
+                setemail("")
+                setcontactnumber("")
+                setpassword("")
+                setconfpassword("")
+  
+                setTimeout(() => {
+                  navigation.navigate("Auth")
+                }, 1500)
+  
               }
               else{
-                alert("Successfully Registered")
+                if(Platform.OS == "android"){
+                  ToastAndroid.show("Failed to Registered", ToastAndroid.SHORT)
+                }
+                else{
+                  alert("Failed to Registered")
+                }
               }
-
-              setcheckedBox(false)
-              setregname("")
-              setemail("")
-              setcontactnumber("")
-              setpassword("")
-              setconfpassword("")
-
-              setTimeout(() => {
-                navigation.navigate("Auth")
-              }, 1500)
-
+            }).catch((err) => {
+              setloadingButton(false)
+              console.log(err)
+              if(Platform.OS == "android"){
+                ToastAndroid.show("Network Error", ToastAndroid.SHORT)
+              }
+              else{
+                alert("Network Error")
+              }
+            })
+          }
+          else{
+            if(Platform.OS == "android"){
+              ToastAndroid.show("Please complete all fields", ToastAndroid.SHORT)
             }
             else{
-              if(Platform.OS == "android"){
-                ToastAndroid.show("Failed to Registered", ToastAndroid.SHORT)
-              }
-              else{
-                alert("Failed to Registered")
-              }
+              alert("Please complete all fields")
             }
-          }).catch((err) => {
-            console.log(err)
-          })
+          }
         }
         else{
           if(Platform.OS == "android"){
@@ -65,6 +86,14 @@ const Register = ({navigation}) => {
           else{
             alert("Password do not match")
           }
+        }
+      }
+      else{
+        if(Platform.OS == "android"){
+          ToastAndroid.show("Please fill the password field", ToastAndroid.SHORT)
+        }
+        else{
+          alert("Please fill the password field")
         }
       }
     }
@@ -92,9 +121,15 @@ const Register = ({navigation}) => {
             <TextInput placeholder='Contact Number' style={styles.textinput} value={contactnumber} onChangeText={(e) => { setcontactnumber(e) }} />
             <TextInput secureTextEntry={true} placeholder='Password' style={styles.textinput} value={password} onChangeText={(e) => { setpassword(e) }} />
             <TextInput secureTextEntry={true} placeholder='Confirm Password' style={styles.textinput} value={confpassword} onChangeText={(e) => { setconfpassword(e) }} />
-            <TouchableOpacity style={styles.loginbtn} onPress={() => { signuprequest() }}>
-              <Text style={styles.loginbtnlabel}>Sign Up</Text>
-            </TouchableOpacity>
+            {loadingButton? (
+              <View style={styles.loginloading}>
+                <Text style={{color: "#808080", fontSize: 13}}>loading...</Text>
+              </View>
+            ) : (
+              <TouchableOpacity style={styles.loginbtn} onPress={() => { signuprequest() }}>
+                <Text style={styles.loginbtnlabel}>Sign Up</Text>
+              </TouchableOpacity>
+            )}
             <View style={{width: "100%", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
               <CheckBox tintColors={{true: "#2B4273"}} disabled={false} value={checkedBox} onValueChange={(value) => { setcheckedBox(value) }}/>
               <Text style={{...styles.text}}>I agree to the </Text>
@@ -164,6 +199,15 @@ const styles = StyleSheet.create({
   },
   loginbtn:{
     backgroundColor: "#2B4273",
+    width: "90%",
+    maxWidth: 200,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    marginBottom: 20
+  },
+  loginloading:{
     width: "90%",
     maxWidth: 200,
     height: 50,
