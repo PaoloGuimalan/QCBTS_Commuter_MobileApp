@@ -222,7 +222,7 @@ const Routes = ({navigation}) => {
                             <MaterialComIcons name='reload' style={{fontSize: 25, color: "#404040"}} />
                         </TouchableOpacity>
                     </View>
-                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10}}>
+                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, paddingBottom: 70}}>
                         {routeloadingStatus? (
                             <View style={{width: "100%", height: 170, backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
                                 <Text style={{color: "#787878", fontSize: 13, marginTop: 10}}>Loading...</Text>
@@ -235,15 +235,15 @@ const Routes = ({navigation}) => {
                                             <Text style={{color: "#808080", fontSize: 13}}>{data.routeID}</Text>
                                         </View>
                                         <View style={{width: "100%", flexDirection: "row", alignItems: 'center'}}>
-                                            <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>{data.routeName}</Text>
+                                            <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold", width: 120}} numberOfLines={2}>{data.routeName}</Text>
                                             <View style={{flex: 1, justifyContent: "center", alignItems: "flex-end"}}>
-                                                <View style={{flexDirection: "row"}}>
+                                                <View style={{flexDirection: "row", justifyContent: "flex-end", width: 170, paddingRight: 0}}>
                                                     <Text style={{color: "#808080", fontSize: 13}}>from </Text>
-                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{data.stationList[0].stationName}</Text>
+                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}} numberOfLines={1}>{data.stationList[0].stationName}</Text>
                                                 </View>
-                                                <View style={{flexDirection: "row"}}>
+                                                <View style={{flexDirection: "row", justifyContent: "flex-end", width: 170, paddingRight: 0}}>
                                                     <Text style={{color: "#808080", fontSize: 13}}>to </Text>
-                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{data.stationList[data.stationList.length - 1].stationName}</Text>
+                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}} numberOfLines={1}>{data.stationList[data.stationList.length - 1].stationName}</Text>
                                                 </View>
                                             </View>
                                         </View>

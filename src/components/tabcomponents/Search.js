@@ -193,15 +193,15 @@ const Search = ({navigation}) => {
                                                         <Text style={{color: "#808080", fontSize: 13}}>{data.routeID}</Text>
                                                     </View>
                                                     <View style={{width: "100%", flexDirection: "row", alignItems: 'center'}}>
-                                                        <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>{data.routeName}</Text>
+                                                        <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold", width: 120}} numberOfLines={2}>{data.routeName}</Text>
                                                         <View style={{flex: 1, justifyContent: "center", alignItems: "flex-end"}}>
-                                                            <View style={{flexDirection: "row"}}>
+                                                            <View style={{flexDirection: "row", justifyContent: "flex-end", width: 170, paddingRight: 0}}>
                                                                 <Text style={{color: "#808080", fontSize: 13}}>from </Text>
-                                                                <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{data.stationList[0].stationName}</Text>
+                                                                <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}} numberOfLines={1}>{data.stationList[0].stationName}</Text>
                                                             </View>
-                                                            <View style={{flexDirection: "row"}}>
+                                                            <View style={{flexDirection: "row", justifyContent: "flex-end", width: 170, paddingRight: 0}}>
                                                                 <Text style={{color: "#808080", fontSize: 13}}>to </Text>
-                                                                <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{data.stationList[data.stationList.length - 1].stationName}</Text>
+                                                                <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}} numberOfLines={1}>{data.stationList[data.stationList.length - 1].stationName}</Text>
                                                             </View>
                                                         </View>
                                                     </View>
