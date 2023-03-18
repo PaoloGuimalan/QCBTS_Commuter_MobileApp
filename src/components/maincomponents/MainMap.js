@@ -4,6 +4,7 @@ import MapView, { Polygon, Polyline, Marker, Callout, Circle } from 'react-nativ
 import QCPath from '../../json/QCPath.json'
 import { locations } from '../../json/data'
 import BusStopIcon from '../../resources/OpenStop.png'
+import BusStopIconSelected from '../../resources/OpenStopSelected.png'
 import LiveBusIcon from '../../resources/livebus.png'
 import Axios from 'axios';
 import { URL } from '../../json/urlconfig'
@@ -130,8 +131,9 @@ const MainMap = () => {
                                 longitude: parseFloat(stops.coordinates.longitude),
                                 latitude: parseFloat(stops.coordinates.latitude)
                             } }) }}
+                            icon={selectedbusstop.busStopID == stops.busStopID? BusStopIconSelected : BusStopIcon}
                         >
-                            <Image source={BusStopIcon} style={{height: 25, width: 25, borderColor: selectedbusstop.busStopID == stops.busStopID? "lime" : "#ffbf00", borderWidth: 2, borderRadius: 25}} />
+                            {/* <Image source={BusStopIcon} style={{height: 25, width: 25, borderColor: selectedbusstop.busStopID == stops.busStopID? "lime" : "#ffbf00", borderWidth: 2, borderRadius: 25}} /> */}
                         </Marker>
                     )
                 })
@@ -206,8 +208,9 @@ const MainMap = () => {
                          } }) 
                         //  console.log(liveroutelist.filter((lrt, a) => lrt.routeID == assignedrouteslist.filter((art, b) => art.companyID == lv.companyID)[0].routeID)[0].routeName)
                         }}
+                        icon={LiveBusIcon}
                         >
-                        <Image source={LiveBusIcon} style={{height: 25, width: 25, borderColor: "#ff914d", borderWidth: 2, borderRadius: 25}} />
+                        {/* <Image source={LiveBusIcon} style={{height: 25, width: 25, borderColor: "#ff914d", borderWidth: 2, borderRadius: 25}} /> */}
                     </Marker>
                 )
             })}

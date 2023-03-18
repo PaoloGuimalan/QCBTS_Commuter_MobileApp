@@ -427,27 +427,35 @@ const Map = ({navigation}) => {
                         </View>
                     </View>
                     {selectedlivebus.userID != ""? (
-                        <TouchableOpacity onPress={() => {  }} onLongPress={() => { dispatch({ type: SET_INITIAL_MAP_TRIGGER, initialmaptrigger: "none" }); dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: selectedlivebusstate }) }} style={{width: "100%"}}>
+                        <TouchableOpacity onPress={() => { navigation.navigate("BusInfo", { bus: { driverID: selectedlivebus.userID, companyID: selectedlivebus.companyID, busID: selectedlivebus.busID, routeID: selectedlivebus.routeID } }) }} onLongPress={() => { dispatch({ type: SET_INITIAL_MAP_TRIGGER, initialmaptrigger: "none" }); dispatch({ type: SET_SELECTED_LIVE_BUS, selectedlivebus: selectedlivebusstate }) }} style={{width: "100%"}}>
                             <View style={{backgroundColor: "#808080", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15}}>
-                                <Text style={{color: "#404040", fontSize: 13}}>Selected Bus:</Text>
-                                <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>{selectedlivebus.busID}</Text>
+                                <View style={{flexDirection: "row", width: "100%", justifyContent: "space-between"}}>
+                                    <View style={{flexDirection: "column", width: "60%"}}>
+                                        <Text style={{color: "#404040", fontSize: 13}}>Selected Bus </Text>
+                                        <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>{selectedlivebus.busID}</Text>
+                                    </View>
+                                    <View style={{flexDirection: "column", width: "40%"}}>
+                                        <Text style={{color: "#505050", fontSize: 11, textAlign: "right"}}>Hold to unselect</Text>
+                                        <Text style={{color: "#505050", fontSize: 11, textAlign: "right"}}>Click to view information</Text>
+                                    </View>
+                                </View>
                                 <Text style={{color: "#404040", fontSize: 13}}>{selectedlivebus.company}</Text>
                                 <View style={{width: "100%", flexDirection: "row"}}>
                                     <View style={{backgroundColor: "transparent", flexDirection: "column", justifyContent: "center", paddingTop: 10}}>
                                         <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedlivebus.plateNumber}</Text>
-                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedlivebus.route}</Text>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold", maxWidth: 200}} numberOfLines={2}>{selectedlivebus.route}</Text>
                                     </View>
-                                    <View style={{justifyContent: "space-around", alignItems: "flex-end", flex: 1, paddingTop: 0}}>
+                                    <View style={{justifyContent: "space-around", alignItems: "flex-end", flex: 1, paddingTop: 5}}>
                                         <MaterialComIcons name='bus' style={{fontSize: 25, color: "#404040"}} />
-                                        <TouchableOpacity onPress={() => { navigation.navigate("BusInfo", { bus: { driverID: selectedlivebus.userID, companyID: selectedlivebus.companyID, busID: selectedlivebus.busID, routeID: selectedlivebus.routeID } }) }} style={{backgroundColor: "white", width: 60, height: 23, justifyContent: "center", alignItems: 'center', borderRadius: 5, marginTop: 10}}>
+                                        {/* <TouchableOpacity onPress={() => { navigation.navigate("BusInfo", { bus: { driverID: selectedlivebus.userID, companyID: selectedlivebus.companyID, busID: selectedlivebus.busID, routeID: selectedlivebus.routeID } }) }} style={{backgroundColor: "white", width: 60, height: 23, justifyContent: "center", alignItems: 'center', borderRadius: 5, marginTop: 10}}>
                                             <Text style={{color: "#404040", fontSize: 13}}>Bus Info</Text>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
                                     </View>
                                 </View>
                             </View>
                         </TouchableOpacity>
                     ) : 
-                    <View style={{backgroundColor: "#D3D3D3", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15, alignItems: "center"}}>
+                    <View style={{backgroundColor: "#D3D3D3", width: "100%", marginTop: 15, minHeight: 135, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15, alignItems: "center"}}>
                         <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>No Bus Selected</Text>
                     </View>
                     }
@@ -460,7 +468,9 @@ const Map = ({navigation}) => {
                                                 <MaterialComIcons name='bus-stop-covered' style={{fontSize: 30, color: "white"}} />
                                                 <View style={{flex: 1, backgroundColor: "transparent", height: "100%", flexDirection: "column", paddingLeft: 10, justifyContent: "center"}}>
                                                     <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.busStopID}</Text>
-                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{stops.stationName}</Text>
+                                                    <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}} numberOfLines={1}>{stops.stationName}</Text>
+                                                    <Text style={{color: "#505050", fontSize: 11, textAlign: "left"}}>Hold to unselect</Text>
+                                                    <Text style={{color: "#505050", fontSize: 11, textAlign: "left"}}>Click to view information</Text>
                                                     {/* {selectedbusstop.busStopID == stops.busStopID? (
                                                         <View style={{paddingTop: 10, flexDirection: "row"}}>
                                                             <TouchableOpacity onPress={() => { markasWaiting(stops.busStopID) }} style={{backgroundColor: "orange", width: 50, height: 23, justifyContent: "center", alignItems: "center", borderRadius: 5, marginRight: 5}}>
@@ -487,13 +497,21 @@ const Map = ({navigation}) => {
                     {selectedroute.routeID != null? (
                         <TouchableOpacity onPress={() => { navigation.navigate("RouteInfo", { id: selectedroute.routeID }) }} onLongPress={() => { dispatch({ type: SET_INITIAL_MAP_TRIGGER, initialmaptrigger: "none" }); dispatch({ type: SET_SELECTED_ROUTE, selectedroute: selectedroutestate }) }} style={{width: "100%"}}>
                             <View style={{backgroundColor: "#808080", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15}}>
-                                <Text style={{color: "#404040", fontSize: 13}}>Selected Route:</Text>
-                                <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}}>{selectedroute.routeName} | {selectedroute.routeID}</Text>
+                                <View style={{flexDirection: "row", width: "100%", justifyContent: "space-between"}}>
+                                    <View style={{flexDirection: "column", width: "60%"}}>
+                                        <Text style={{color: "#404040", fontSize: 13}}>Selected Route</Text>
+                                        <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold"}} numberOfLines={3}>{selectedroute.routeName} | {selectedroute.routeID}</Text>
+                                    </View>
+                                    <View style={{flexDirection: "column", width: "40%"}}>
+                                        <Text style={{color: "#505050", fontSize: 11, textAlign: "right"}}>Hold to unselect</Text>
+                                        <Text style={{color: "#505050", fontSize: 11, textAlign: "right"}}>Click to view information</Text>
+                                    </View>
+                                </View>
                                 <Text style={{color: "#404040", fontSize: 13}}>{selectedroute.stationList.length} stations in this route</Text>
                                 <View style={{width: "100%", flexDirection: "row"}}>
                                     <View style={{backgroundColor: "transparent", flexDirection: "column", justifyContent: "center", paddingTop: 10}}>
-                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedroute.stationList[0].stationName}</Text>
-                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}}>{selectedroute.stationList[selectedroute.stationList.length - 1].stationName}</Text>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold", maxWidth: 200}} numberOfLines={1}>{selectedroute.stationList[0].stationName}</Text>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold", maxWidth: 200}} numberOfLines={1}>{selectedroute.stationList[selectedroute.stationList.length - 1].stationName}</Text>
                                     </View>
                                     <View style={{justifyContent: "center", alignItems: "flex-end", flex: 1, paddingTop: 5}}>
                                         <MaterialComIcons name='directions-fork' style={{fontSize: 25, color: "#404040"}} />
@@ -502,7 +520,7 @@ const Map = ({navigation}) => {
                             </View>
                         </TouchableOpacity>
                     ) : 
-                    <View style={{backgroundColor: "#D3D3D3", width: "100%", marginTop: 15, minHeight: 100, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15, alignItems: "center"}}>
+                    <View style={{backgroundColor: "#D3D3D3", width: "100%", marginTop: 15, minHeight: 155, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 15, alignItems: "center"}}>
                         <Text style={{color: "#808080", fontSize: 13, fontWeight: "bold"}}>No Routes Selected</Text>
                     </View>
                 }
