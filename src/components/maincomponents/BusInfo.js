@@ -78,8 +78,8 @@ const BusInfo = ({route, navigation}) => {
           }
         }).then((response) => {
           if(response.data.status){
-            // console.log(response.data.result)
-            setselectedBusStopBar(`${response.data.result.routesdata.stationList[0].stationID}_0`)
+            // console.log(livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].fromStation)
+            setselectedBusStopBar(`${livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].fromStation.stationID}_${livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].fromStation.stationIndex}`)
             setinitialBusInfoData(response.data.result)
           }
           else{
@@ -91,6 +91,12 @@ const BusInfo = ({route, navigation}) => {
       }
     })
   }
+
+  useEffect(() => {
+    if(livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID).length != 0){
+      setselectedBusStopBar(`${livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].fromStation.stationID}_${livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].fromStation.stationIndex}`)
+    }
+  },[livebuslist])
 
   const computeDistanceStops = (lat1, lon1, lat2, lon2) => {
     const R = 6371e3;
@@ -166,7 +172,7 @@ const BusInfo = ({route, navigation}) => {
               <View style={{flexDirection: "column", width: "50%"}}>
                 <Text style={{fontSize: 17, color: "#404040", fontWeight: "bold", marginBottom: 10, textAlign: "right"}}>Company</Text>
                 <Text style={{fontSize: 13, color: "#404040", marginTop: 0, textAlign: "right"}}>{initialBusInfoData.companydata.companyName}</Text>
-                <Text style={{fontSize: 13, color: "#404040", marginTop: 0, textAlign: "right"}}>{initialBusInfoData.companydata.companyAddress}</Text>
+                <Text style={{fontSize: 13, color: "#404040", marginTop: 0, textAlign: "right"}} numberOfLines={1}>{livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID).length == 0? "No Update" : livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].fromStation.stationName}</Text>
                 <Text style={{fontSize: 13, color: "#404040", marginTop: 0, textAlign: "right"}}>{initialBusInfoData.routesdata.stationList.length} stations in this route</Text>
               </View>
             </View>
@@ -178,16 +184,24 @@ const BusInfo = ({route, navigation}) => {
                 <ScrollView nestedScrollEnabled={true} style={{width: "100%", paddingTop: 15}} contentContainerStyle={{alignItems: "center"}}>
                   {initialBusInfoData.routesdata.stationList.map((st, i) => {
                     return(
-                      <TouchableOpacity key={`${st.stationID}_${i}`} onPress={() => { setselectedBusStopBar(`${st.stationID}_${i}`) }} style={{width: "100%", backgroundColor: "transparent", marginBottom: 4, maxWidth: 300}}>
+                      <TouchableOpacity key={`${st.stationID}_${i}`} onPress={() => { /**setselectedBusStopBar(`${st.stationID}_${i}`)*/ }} style={{width: "100%", backgroundColor: "transparent", marginBottom: 4, maxWidth: 300}}>
                         <View style={{width: "100%", minHeight: 150, flexDirection: "row"}}>
                           <View style={{width: 25, height: 150, backgroundColor: "blue"}}>
-                            <View style={{width: "100%", height: busactivestatus? selectedBusStopBar == `${st.stationID}_${i}`? `${computeDistance(st.coordinates[1], st.coordinates[0], livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].latitude, livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].longitude, i)}%` : "0%" : "0%", backgroundColor: "orange", alignItems: "center", justifyContent: "flex-end", borderBottomLeftRadius: 10, borderBottomRightRadius: 10}}>
-                              {busactivestatus? (
-                                selectedBusStopBar == `${st.stationID}_${i}`? (
-                                  <Image source={LiveBusIcon} style={{width: 30, height: 30, marginTop: 0}} />
-                                ) : null
-                              ) : null}
-                            </View>
+                            {livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID).length != 0? (
+                              livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].fromStation.stationIndex > i? (
+                                <View style={{width: "100%", height: "100%", backgroundColor: "orange", alignItems: "center", justifyContent: "flex-end", borderBottomLeftRadius: 0, borderBottomRightRadius: 0}}>
+                                  
+                                </View>
+                              ) : (
+                                <View style={{width: "100%", height: busactivestatus? selectedBusStopBar == `${st.stationID}_${i}`? `${computeDistance(st.coordinates[1], st.coordinates[0], livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].latitude, livebuslist.filter((lv, i) => lv.userID == route.params.bus.driverID)[0].longitude, i)}%` : "0%" : "0%", backgroundColor: "orange", alignItems: "center", justifyContent: "flex-end", borderBottomLeftRadius: 10, borderBottomRightRadius: 10}}>
+                                  {busactivestatus? (
+                                    selectedBusStopBar == `${st.stationID}_${i}`? (
+                                      <Image source={LiveBusIcon} style={{width: 30, height: 30, marginTop: 0}} />
+                                    ) : null
+                                  ) : null}
+                                </View>
+                              )
+                            ) : null}
                           </View>
                           <View style={{flex: 1, backgroundColor: "transparent", alignItems: 'center'}}>
                             <View style={{width: 240, height: 70, backgroundColor: "orange", borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, padding: 10}}>

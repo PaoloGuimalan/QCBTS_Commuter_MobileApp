@@ -191,7 +191,12 @@ export const selectedlivebusstate = {
     plateNumber: "",
     route: "",
     latitude: "",
-    longitude: ""
+    longitude: "",
+    fromStation: {
+        stationID: null,
+        stationName: null,
+        stationIndex: null
+    }
 }
 
 export const setselectedlivebus = (state = selectedlivebusstate, action) => {
