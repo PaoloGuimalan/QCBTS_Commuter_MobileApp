@@ -31,8 +31,8 @@ const PersonalInfo = ({navigation}) => {
   }
 
   return (
-    <View style={{backgroundColor: "transparent", alignItems: "center", flexDirection: "column", paddingLeft: 20, paddingRight: 20, maxWidth: 500, alignSelf: "center"}}>
-      <View style={{backgroundColor: "transparent", width: "100%", borderWidth: 1, borderColor: "#939393", borderRadius: 10}}>
+    <View style={{backgroundColor: "transparent", alignItems: "center", flexDirection: "column", paddingLeft: 20, paddingRight: 20, maxWidth: 500, width: "100%", alignSelf: "center"}}>
+      <View style={{backgroundColor: "transparent", width: "100%", borderWidth: 1, borderColor: "#939393", borderRadius: 10, justifyContent: "center"}}>
         <TouchableOpacity style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 1}}>
             <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 20, paddingRight: 20, height: 70, alignItems: "center", flexDirection: "row"}}>
                 <View style={{flex: 1}}>
@@ -79,7 +79,7 @@ const PersonalInfo = ({navigation}) => {
             </View>
         </TouchableOpacity>
       </View>
-      <View style={{backgroundColor: "transparent", marginTop: 30, width: "100%"}}>
+      <View style={{backgroundColor: "transparent", marginTop: 30, width: "100%", alignItems: "center"}}>
         <TouchableOpacity onPress={() => { logoutProcess() }} style={{backgroundColor: "red", width: 100, height: 40, borderRadius: 20, justifyContent: "center", alignItems: "center"}}>
             <Text style={{fontSize: 15, color: "white"}}>Logout</Text>
         </TouchableOpacity>

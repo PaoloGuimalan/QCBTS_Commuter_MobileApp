@@ -38,14 +38,15 @@ const AdvanceInfo = () => {
 
   return (
     <View style={{backgroundColor: "transparent", alignItems: "center", flexDirection: "column", paddingLeft: 20, paddingRight: 20}}>
-      <View style={{backgroundColor: "transparent", width: "100%"}}>
-        <Text style={{color: "#303030", fontSize: 17, fontWeight: "bold", marginBottom: 15}}>Waiting History</Text>
+      <View style={{backgroundColor: "transparent", width: "100%", alignItems: "center"}}>
+        <Text style={{color: "#303030", fontSize: 17, fontWeight: "bold", marginBottom: 15, alignSelf: "flex-start"}}>Waiting History</Text>
         {waitingHistoryList.length == 0? (
           <View style={{width: "100%", justifyContent: "center", alignItems: "center", height: 150}}>
             <Text style={{color: "grey", fontSize: 15}}>No History yet</Text>
           </View>
         ) : (
           <ScrollView
+          nestedScrollEnabled={true}
           refreshControl={
             <RefreshControl
                 refreshing={refreshWH}

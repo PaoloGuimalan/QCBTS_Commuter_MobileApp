@@ -160,7 +160,7 @@ const Routes = ({navigation}) => {
             </View>
             <Image source={citylayout} style={{width: "100%", height: 140, maxWidth: 385}} />
         </View>
-        <View style={{backgroundColor: "transparent", flex: 1, width: "100%"}}>
+        <View style={{backgroundColor: "transparent", flex: 1, width: "100%", alignItems: "center"}}>
             <ScrollView style={{width: "100%", backgroundColor: "transparent"}} contentContainerStyle={{flexGrow: 1}}>
                 <View style={{backgroundColor: "transparent", justifyContent: "center", width: "100%", paddingLeft: 20, paddingRight: 20, paddingBottom: 15, paddingTop: 10}}>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: "center", backgroundColor: "transparent", height: 40}}>

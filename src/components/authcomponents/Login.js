@@ -142,10 +142,10 @@ const styles = StyleSheet.create({
   carimgstyle:{
     position: "absolute",
     zIndex: 1,
-    width: 195,
-    height: 195,
-    top: 150,
-    left: 10
+    width: 120,
+    height: 120,
+    top: 180,
+    left: 20,
   },
   viewmainform:{
     backgroundColor: "white",
