@@ -166,8 +166,8 @@ const styles = StyleSheet.create({
   },
   imagelayout:{
     width: "100%",
-    height: 160,
-    maxWidth: 415
+    height: 220,
+    // maxWidth: 415
   },
   viewform:{
     backgroundColor: "white",
