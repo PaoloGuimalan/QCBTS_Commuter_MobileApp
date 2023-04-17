@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, ImageBackground } from 'react-native'
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, ImageBackground, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import citylayout from '../../resources/citylayout.png'
@@ -18,11 +18,14 @@ const Feed = ({navigation}) => {
   const feedlist = useSelector(state => state.feedlist);
   const dispatch = useDispatch()
 
+  const [refreshingFeed, setrefreshingFeed] = useState(false)
+
   useEffect(() => {
     getFeed()
   },[])
 
   const getFeed = async () => {
+    setrefreshingFeed(true)
     await AsyncStorage.getItem("token").then((resp) => {
         if(resp != null){
             Axios.get(`${URL}/commuters/getPosts`, {
@@ -30,6 +33,7 @@ const Feed = ({navigation}) => {
                   "x-access-token": resp
                 }
               }).then((response) => {
+                setrefreshingFeed(false)
                 if(response.data.status){
                 //   console.log(response.data.result)
                     dispatch({type: SET_FEED_LIST, feedlist: response.data.result})
@@ -46,7 +50,14 @@ const Feed = ({navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: "#2B4273", justifyContent: "flex-start", alignItems: "center", flexDirection: "column"}}>
-      <ScrollView style={{width: "100%"}} contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView style={{width: "100%"}}
+      refreshControl={
+        <RefreshControl
+            refreshing={refreshingFeed}
+            onRefresh={() => { getFeed() }}
+        />
+      }
+      contentContainerStyle={{flexGrow: 1}}>
         <View style={{backgroundColor: "transparent", width: "100%", height: 180, alignItems: "center"}}>
             <View style={{backgroundColor: "transparent", width: "100%", height: 60, flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between"}}>
                 <View style={{backgroundColor: "transparent", flexDirection: "column", paddingLeft: 20, paddingRight: 20}}>
@@ -57,9 +68,9 @@ const Feed = ({navigation}) => {
                     <TouchableOpacity onPress={() => { navigation.navigate("Profile") }} style={{backgroundColor: "white", width: 40, height: 40, borderRadius: 40, justifyContent: "center", alignItems: "center", marginLeft: 5, marginRight: 5, elevation: 2}}>
                         <OctiIcons name='person' style={{fontSize: 20, color: "black"}} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{backgroundColor: "white", width: 40, height: 40, borderRadius: 40, justifyContent: "center", alignItems: "center", marginLeft: 5, marginRight: 5, elevation: 2}}>
+                    {/* <TouchableOpacity style={{backgroundColor: "white", width: 40, height: 40, borderRadius: 40, justifyContent: "center", alignItems: "center", marginLeft: 5, marginRight: 5, elevation: 2}}>
                         <IonIcons name='notifications-outline' style={{fontSize: 20, color: "black"}} />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
             <Image source={citylayout} style={{width: "100%", height: 160, maxWidth: 385}} />

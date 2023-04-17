@@ -14,6 +14,8 @@ const Login = ({navigation}) => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
+  const [loggingIn, setloggingIn] = useState(false)
+
   const dispatch = useDispatch()
 
   const loginRequest = () => {
@@ -26,10 +28,12 @@ const Login = ({navigation}) => {
       }
     }
     else{
+      setloggingIn(true)
       Axios.post(`${URL}/auth/logincommuter`,{
         email: email,
         password: password
       }).then((response) => {
+        setloggingIn(false)
         if(response.data.status){
           if(Platform.OS == "android"){
             ToastAndroid.show("Logged In", ToastAndroid.SHORT)
@@ -58,6 +62,7 @@ const Login = ({navigation}) => {
         }
       }).catch((err) => {
         console.log(err);
+        setloggingIn(false)
       })
     }
   }
@@ -73,11 +78,17 @@ const Login = ({navigation}) => {
           <View style={styles.viewform}>
             <View style={styles.viewmainform}>
               <Text style={{...styles.text, ...styles.loginlabel}}>Log In</Text>
-              <TextInput placeholder='Email' style={styles.textinput} value={email} onChangeText={(e) => { setemail(e) }} />
-              <TextInput secureTextEntry={true} placeholder='Password' style={styles.textinput} value={password} onChangeText={(e) => { setpassword(e) }} />
-              <TouchableOpacity style={styles.loginbtn} onPress={() => { loginRequest() }}>
-                <Text style={styles.loginbtnlabel}>Log In</Text>
-              </TouchableOpacity>
+              <TextInput placeholder='Email' style={styles.textinput} placeholderTextColor="#808080" value={email} onChangeText={(e) => { setemail(e) }} />
+              <TextInput secureTextEntry={true} placeholder='Password' style={styles.textinput} placeholderTextColor="#808080" value={password} onChangeText={(e) => { setpassword(e) }} />
+              {loggingIn? (
+                <View style={styles.loginginlabel}>
+                  <Text>logging in...</Text>
+                </View>
+              ) : (
+                <TouchableOpacity style={styles.loginbtn} onPress={() => { loginRequest() }}>
+                  <Text style={styles.loginbtnlabel}>Log In</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity style={{padding: 10, marginTop: 20, marginBottom: 20}}>
                 <Text style={{color: "black"}}>Forgot Password?</Text>
               </TouchableOpacity>
@@ -168,7 +179,8 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     fontSize: 15,
     color: "black",
-    marginBottom: 15
+    marginBottom: 15,
+    // textAlign: "center"
   },
   loginbtn:{
     backgroundColor: "#2B4273",
@@ -182,7 +194,16 @@ const styles = StyleSheet.create({
   loginbtnlabel:{
     color: "white",
     fontSize: 15
-  }
+  },
+  loginginlabel:{
+    backgroundColor: "transparent",
+    width: "90%",
+    maxWidth: 200,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20
+  },
 })
 
 export default Login

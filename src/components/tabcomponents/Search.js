@@ -254,7 +254,7 @@ const Search = ({navigation}) => {
                     ) : (
                         <View style={{backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center"}}>
                             <MCIcons name='image-filter-none' style={{fontSize: 60}} />
-                            <Text style={{color: "#787878", fontSize: 13, marginTop: 10}}>Search something</Text>
+                            <Text style={{color: "#787878", fontSize: 13, marginTop: 20}}>Search a Bus Stop, Route and Active Buses</Text>
                         </View>
                     )
                 )}

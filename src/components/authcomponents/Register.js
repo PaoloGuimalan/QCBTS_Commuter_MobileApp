@@ -116,11 +116,11 @@ const Register = ({navigation}) => {
         <View style={styles.viewform}>
           <Text style={{...styles.text, ...styles.signuplabel}}>Sign Up</Text>
           <View style={{width: "100%", flex: 1, flexDirection: "column", alignItems: "center", paddingTop: 20}}>
-            <TextInput placeholder='Your Name' style={styles.textinput} value={regname} onChangeText={(e) => { setregname(e) }} />
-            <TextInput placeholder='Email' style={styles.textinput} value={email} onChangeText={(e) => { setemail(e) }} />
-            <TextInput placeholder='Contact Number' style={styles.textinput} value={contactnumber} onChangeText={(e) => { setcontactnumber(e) }} />
-            <TextInput secureTextEntry={true} placeholder='Password' style={styles.textinput} value={password} onChangeText={(e) => { setpassword(e) }} />
-            <TextInput secureTextEntry={true} placeholder='Confirm Password' style={styles.textinput} value={confpassword} onChangeText={(e) => { setconfpassword(e) }} />
+            <TextInput placeholder='Your Name' placeholderTextColor="#808080" style={styles.textinput} value={regname} onChangeText={(e) => { setregname(e) }} />
+            <TextInput placeholder='Email' placeholderTextColor="#808080" style={styles.textinput} value={email} onChangeText={(e) => { setemail(e) }} />
+            <TextInput placeholder='Contact Number' placeholderTextColor="#808080" style={styles.textinput} value={contactnumber} onChangeText={(e) => { setcontactnumber(e) }} />
+            <TextInput secureTextEntry={true} placeholder='Password' placeholderTextColor="#808080" style={styles.textinput} value={password} onChangeText={(e) => { setpassword(e) }} />
+            <TextInput secureTextEntry={true} placeholder='Confirm Password' placeholderTextColor="#808080" style={styles.textinput} value={confpassword} onChangeText={(e) => { setconfpassword(e) }} />
             {loadingButton? (
               <View style={styles.loginloading}>
                 <Text style={{color: "#808080", fontSize: 13}}>loading...</Text>

@@ -199,12 +199,12 @@ const Routes = ({navigation}) => {
                                                 navigation.navigate("Map")
                                             },500)
                                         }} style={{backgroundColor: "transparent", width: 120, margin: 5, height: 120, borderRadius: 5}}>
-                                            <View style={{flex: 1, width: "100%", height: "100%", backgroundColor: "#808080", borderRadius: 10, flexDirection: "column", justifyContent: "flex-end", alignItems: "center"}}>
+                                            <View style={{flex: 1, width: "100%", height: "100%", backgroundColor: "#909090", borderRadius: 10, flexDirection: "column", justifyContent: "flex-end", alignItems: "center", paddingBottom: 5}}>
                                                 <MaterialComIcons name='bus' style={{fontSize: 50, color: "#404040"}} />
                                                 <View style={{backgroundColor: "transparent", width: "100%", height: 50}}>
                                                     <View style={{backgroundColor: "transparent", flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
                                                         <Text style={{fontSize: 13, fontWeight: "bold"}}>{bss.busID}</Text>
-                                                        <Text style={{fontSize: 12, textAlign: "center", width: "90%"}} numberOfLines={2}>{bss.routeName}</Text>
+                                                        <Text style={{fontSize: 12, textAlign: "center", width: "90%", color: "#404040"}} numberOfLines={2}>{bss.routeName}</Text>
                                                     </View>
                                                 </View>
                                             </View>
@@ -222,7 +222,7 @@ const Routes = ({navigation}) => {
                             <MaterialComIcons name='reload' style={{fontSize: 25, color: "#404040"}} />
                         </TouchableOpacity>
                     </View>
-                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, paddingBottom: 70}}>
+                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, paddingBottom: 70, alignItems: 'center'}}>
                         {routeloadingStatus? (
                             <View style={{width: "100%", height: 170, backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
                                 <Text style={{color: "#787878", fontSize: 13, marginTop: 10}}>Loading...</Text>
