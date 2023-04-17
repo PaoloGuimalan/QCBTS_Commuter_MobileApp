@@ -62,8 +62,8 @@ const Feed = ({navigation}) => {
         <View style={{backgroundColor: "transparent", width: "100%", height: 180, alignItems: "center"}}>
             <View style={{backgroundColor: "transparent", width: "100%", height: 60, flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between"}}>
                 <View style={{backgroundColor: "transparent", flexDirection: "column", paddingLeft: 20, paddingRight: 20}}>
-                    <Text style={{color: "white", fontSize: 17, fontWeight: "bold"}}>Bus Track</Text>
-                    <Text style={{color: "white", fontSize: 12}}>Quezon City</Text>
+                    <Text style={{color: "white", fontSize: 17, fontWeight: "bold", textShadowColor: "black", textShadowOffset: { height: 0.5, width: 0.5 }, textShadowRadius: 1}}>Bus Track</Text>
+                    <Text style={{color: "white", fontSize: 12, textShadowColor: "black", textShadowOffset: { height: 0.5, width: 0.5 }, textShadowRadius: 1}}>Quezon City</Text>
                 </View>
                 <View style={{backgroundColor: "transparent", flexDirection: "row", paddingLeft: 20, paddingRight: 20}}>
                     <TouchableOpacity onPress={() => { navigation.navigate("Profile") }} style={{backgroundColor: "white", width: 40, height: 40, borderRadius: 40, justifyContent: "center", alignItems: "center", marginLeft: 5, marginRight: 5, elevation: 2}}>
@@ -74,7 +74,7 @@ const Feed = ({navigation}) => {
                     </TouchableOpacity> */}
                 </View>
             </View>
-            <Image source={citylayout} style={{width: "100%", height: 160, maxWidth: 385}} />
+            <Image source={citylayout} style={{width: "100%", height: 200, position: "absolute", zIndex: -1}} />
         </View>
         <Image source={carimg} style={styles.carimgstyle} />
         <View style={{flex: 1, backgroundColor: "white", width: '100%', alignItems: "center", borderTopLeftRadius: 15, borderTopRightRadius: 15, paddingTop: 35, paddingBottom: 100}}>
@@ -88,9 +88,9 @@ const Feed = ({navigation}) => {
                             <View style={{width: "100%", backgroundColor: "transparent", height: "50%", flexDirection: "column", justifyContent: 'flex-end', alignItems: "center", paddingBottom: 15, paddingLeft: 20, paddingRight: 20}}>
                                 <View style={{width: "100%", flexDirection: "row"}}>
                                     <IonIcons name='time-outline' style={{fontSize: 15, color: "white"}} />
-                                    <Text style={{color: "white", fontSize: 12, width: "100%", textAlign: "justify", marginLeft: 3}}>{feedlist[0].date}</Text>
+                                    <Text style={{color: "white", fontSize: 12, width: "100%", textAlign: "justify", marginLeft: 3, textShadowColor: "black", textShadowOffset: { height: 0.5, width: 0.5 }, textShadowRadius: 1}}>{feedlist[0].date}</Text>
                                 </View>
-                                <Text style={{color: "white", fontSize: 17, width: "100%", textAlign: "justify"}}>{feedlist[0].title}</Text>
+                                <Text style={{color: "white", fontSize: 17, width: "100%", textAlign: "justify", textShadowColor: "black", textShadowOffset: { height: 0.5, width: 0.5 }, textShadowRadius: 1}}>{feedlist[0].title}</Text>
                             </View>
                         </ImageBackground>
                     </TouchableOpacity>

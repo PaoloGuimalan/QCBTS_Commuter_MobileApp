@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   viewlayout:{
     flexDirection: "column",
-    justifyContent: "flex-end",
+    // justifyContent: "flex-end",
     alignItems: 'center',
     width: "100%",
     height: 200

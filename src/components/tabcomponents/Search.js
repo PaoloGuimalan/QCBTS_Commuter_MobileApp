@@ -119,14 +119,14 @@ const Search = ({navigation}) => {
     return (
      <View style={{flex: 1, justifyContent: "flex-start", alignItems: "center", backgroundColor: "white", flexDirection: "column"}}>
         <View style={{height: 180, backgroundColor: "#2B4273", width: "100%", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, justifyContent: "flex-end", alignItems: "center"}}>
-            <View style={{position: "relative", top: 105, zIndex: 1, width: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+            <View style={{position: "relative", top: 145, zIndex: 1, width: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
                 <Text style={{color: "white", fontSize: 20, fontWeight: "bold", marginBottom: 10, textShadowColor: "black", textShadowOffset: { height: 0.5, width: 0.5 }, textShadowRadius: 1}}>Explore</Text>
                 <View style={{backgroundColor: "white", width: "80%", height: 40, borderRadius: 40, maxWidth: 500, flexDirection: "row", alignItems: "center", paddingLeft: 10, paddingRight: 10, elevation: 2, zIndex: 1}}>
                     <IonIcons name='search' style={{color: "#7A7A7A", fontSize: 25}} />
                     <TextInput onSubmitEditing={() => { getSearchResults() }} placeholder='Search here...' style={{backgroundColor: "transparent", flex: 1, color: "black"}} value={keyword} onChangeText={(e) => { setkeyword(e) }} />
                 </View>
             </View>
-            <Image source={citylayout} style={{width: "100%", height: 140, maxWidth: 385}} />
+            <Image source={citylayout} style={{width: "100%", height: 180, zIndex: -1, borderBottomLeftRadius: 15, borderBottomRightRadius: 15}} />
         </View>
         <View style={{backgroundColor: "transparent", flex: 1, width: "100%"}}>
             <ScrollView style={{width: "100%", backgroundColor: "transparent"}} contentContainerStyle={{flexGrow: 1, paddingBottom: 70}}>
@@ -167,8 +167,8 @@ const Search = ({navigation}) => {
                                                             <MaterialComIcons name='bus' style={{fontSize: 50, color: "#404040"}} />
                                                             <View style={{backgroundColor: "transparent", width: "100%", height: 50}}>
                                                                 <View style={{backgroundColor: "transparent", flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-                                                                    <Text style={{fontSize: 13, fontWeight: "bold"}}>{bss.busID}</Text>
-                                                                    <Text style={{fontSize: 12, textAlign: "center", width: "90%"}} numberOfLines={2}>{bss.routeName}</Text>
+                                                                    <Text style={{fontSize: 13, fontWeight: "bold", color: "#404040"}}>{bss.busID}</Text>
+                                                                    <Text style={{fontSize: 12, textAlign: "center", width: "90%", color: "#404040"}} numberOfLines={2}>{bss.routeName}</Text>
                                                                 </View>
                                                             </View>
                                                         </View>
@@ -237,8 +237,8 @@ const Search = ({navigation}) => {
                                                             <MaterialComIcons name='bus-stop-covered' style={{fontSize: 50, color: "#404040"}} />
                                                             <View style={{backgroundColor: "transparent", width: "100%", height: 50}}>
                                                                 <View style={{backgroundColor: "transparent", flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-                                                                    <Text style={{fontSize: 13, fontWeight: "bold"}}>{bss.busStopID}</Text>
-                                                                    <Text style={{fontSize: 12, textAlign: "center", width: "90%"}} numberOfLines={2}>{bss.stationName}</Text>
+                                                                    <Text style={{fontSize: 13, fontWeight: "bold", color: "#404040"}}>{bss.busStopID}</Text>
+                                                                    <Text style={{fontSize: 12, textAlign: "center", width: "90%", color: "#404040"}} numberOfLines={2}>{bss.stationName}</Text>
                                                                 </View>
                                                             </View>
                                                         </View>

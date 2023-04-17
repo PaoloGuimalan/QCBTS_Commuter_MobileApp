@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   viewimglayout:{
     width: "100%",
     height: 240,
-    justifyContent: "flex-end",
+    // justifyContent: "flex-end",
     alignItems: "center"
   },
   textinput:{

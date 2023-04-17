@@ -155,10 +155,10 @@ const Routes = ({navigation}) => {
     return (
         <View style={{flex: 1, justifyContent: "flex-start", alignItems: "center", backgroundColor: "white", flexDirection: "column"}}>
         <View style={{height: 180, backgroundColor: "#2B4273", width: "100%", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, justifyContent: "flex-end", alignItems: "center"}}>
-            <View style={{position: "relative", top: 85, zIndex: 1, width: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+            <View style={{position: "relative", top: 125, zIndex: 1, width: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
                 <Text style={{color: "white", fontSize: 20, fontWeight: "bold", marginBottom: 10, textShadowColor: "black", textShadowOffset: { height: 0.5, width: 0.5 }, textShadowRadius: 1}}>Buses & Routes</Text>
             </View>
-            <Image source={citylayout} style={{width: "100%", height: 140, maxWidth: 385}} />
+            <Image source={citylayout} style={{width: "100%", height: 180, zIndex: -1, borderBottomLeftRadius: 15, borderBottomRightRadius: 15}} />
         </View>
         <View style={{backgroundColor: "transparent", flex: 1, width: "100%", alignItems: "center"}}>
             <ScrollView style={{width: "100%", backgroundColor: "transparent"}} contentContainerStyle={{flexGrow: 1}}>
@@ -169,7 +169,7 @@ const Routes = ({navigation}) => {
                             <MaterialComIcons name='reload' style={{fontSize: 25, color: "#404040"}} />
                         </TouchableOpacity>
                     </View>
-                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, flex: 1, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-around"}}>
+                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, flex: 1, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-around", alignSelf: "center"}}>
                         {busesloadingStatus? (
                             <View style={{width: "100%", height: 170, backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
                                 <Text style={{color: "#787878", fontSize: 13, marginTop: 10}}>Loading...</Text>
@@ -203,7 +203,7 @@ const Routes = ({navigation}) => {
                                                 <MaterialComIcons name='bus' style={{fontSize: 50, color: "#404040"}} />
                                                 <View style={{backgroundColor: "transparent", width: "100%", height: 50}}>
                                                     <View style={{backgroundColor: "transparent", flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-                                                        <Text style={{fontSize: 13, fontWeight: "bold"}}>{bss.busID}</Text>
+                                                        <Text style={{fontSize: 13, fontWeight: "bold", color: "#404040"}}>{bss.busID}</Text>
                                                         <Text style={{fontSize: 12, textAlign: "center", width: "90%", color: "#404040"}} numberOfLines={2}>{bss.routeName}</Text>
                                                     </View>
                                                 </View>
@@ -222,7 +222,7 @@ const Routes = ({navigation}) => {
                             <MaterialComIcons name='reload' style={{fontSize: 25, color: "#404040"}} />
                         </TouchableOpacity>
                     </View>
-                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, paddingBottom: 70, alignItems: 'center'}}>
+                    <View style={{backgroundColor: "transparent", width: "100%", maxWidth: 500, paddingTop: 10, paddingBottom: 70, alignItems: 'center', alignSelf: "center"}}>
                         {routeloadingStatus? (
                             <View style={{width: "100%", height: 170, backgroundColor: "transparent", flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
                                 <Text style={{color: "#787878", fontSize: 13, marginTop: 10}}>Loading...</Text>

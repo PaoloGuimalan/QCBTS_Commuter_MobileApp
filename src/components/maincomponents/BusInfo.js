@@ -150,12 +150,12 @@ const BusInfo = ({route, navigation}) => {
           <View style={{backgroundColor: "transparent", width: "100%", height: 120, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, flexDirection: "column"}}>
             <View style={{flexDirection: "row", marginTop: 15, paddingLeft: 20, alignItems: "center"}}>
               <TouchableOpacity onPress={() => { navigation.goBack() }} style={{flexDirection: "row", alignItems: "center", height: 30}}>
-                <MIcons name='arrow-back-ios' style={{fontSize: 20, color: "white"}} />
-                <Text style={{fontSize: 15, color: "white", marginLeft: 5}}>Bus Info</Text>
+                <MIcons name='arrow-back-ios' style={{fontSize: 20, color: "white", textShadowColor: "black", textShadowOffset: { height: 0.5, width: 0.5 }, textShadowRadius: 1}} />
+                <Text style={{fontSize: 15, color: "white", marginLeft: 5, textShadowColor: "black", textShadowOffset: { height: 0.5, width: 0.5 }, textShadowRadius: 1}}>Bus Info</Text>
               </TouchableOpacity>
             </View>
             <View style={{width: "100%", height: "100%", backgroundColor: "#2B4273", position: "absolute", zIndex: -2, justifyContent: "center", alignItems: "center", borderBottomLeftRadius: 10, borderBottomRightRadius: 10}}>
-              <Image source={citylayout} style={{width: "100%", height: 140, maxWidth: 385, marginBottom: -120, zIndex: -3}} />
+              <Image source={citylayout} style={{width: "100%", height: 140, marginBottom: 0, zIndex: -3, borderBottomLeftRadius: 40, borderBottomRightRadius: 40}} />
             </View>
           </View>
           <View style={{zIndex: 1, backgroundColor: "white", width: "100%", padding: 10, paddingTop: 20, flex: 1}}>
@@ -205,7 +205,7 @@ const BusInfo = ({route, navigation}) => {
                           </View>
                           <View style={{flex: 1, backgroundColor: "transparent", alignItems: 'center'}}>
                             <View style={{width: 240, height: 70, backgroundColor: "orange", borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, padding: 10}}>
-                              <Text style={{fontSize: 15, fontWeight: "bold"}}>{st.stationName}</Text>
+                              <Text style={{fontSize: 15, fontWeight: "bold", color: "white"}}>{st.stationName}</Text>
                             </View>
                           </View>
                         </View>
