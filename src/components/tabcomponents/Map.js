@@ -330,8 +330,8 @@ const Map = ({navigation}) => {
             <TouchableOpacity onPress={() => { settoggleMapMenu(!toggleMapMenu) }} style={{height: 30, width: "100%", justifyContent: "center", alignItems: "center", flexDirection: "row", paddingLeft: 15, paddingRight: 15, borderBottomColor: "#808080", borderBottomWidth: toggleMapMenu? 1 : 0}}>
                 <Text style={{color: "black", fontSize: 15, fontWeight: "bold"}}>Menu</Text>
                 <View style={{flex: 1, justifyContent: "flex-end", alignItems: "center", flexDirection: 'row', paddingLeft: 10, paddingRight: 10}}>
-                    <MaterialIcons name='directions' style={{ color: "red", fontSize: 20, marginLeft:5 }} />
-                    <IonIcons name='hand-left-sharp' style={{ color: "red", fontSize: 15, marginLeft:5 }} />
+                    <MaterialIcons name='directions' style={{ color: selectedroute.routeID != null? "green" : "red", fontSize: 20, marginLeft:5 }} />
+                    <IonIcons name='hand-left-sharp' style={{ color: waitingbusstop.busStopID != ''? "orange" : "red", fontSize: 15, marginLeft:5 }} />
                     <EntypoIcon name='location-pin' style={{ color: enablelocation? "green" : "red", fontSize: 20, marginLeft:5 }} />
                 </View>
                 <AntDesignIcon name={toggleMapMenu? 'down' : 'up'} style={{ color: "black", fontSize: 20 }} />

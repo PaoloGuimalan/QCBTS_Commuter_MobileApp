@@ -65,6 +65,7 @@ const Auth = () => {
 
   return (
     <AuthStack.Navigator>
+        {/* <AuthStack.Screen name='Home' component={authdetails.auth != null? authdetails.auth? Loading : Loading : Loading} options={{headerShown: false}} /> */}
         <AuthStack.Screen name='Home' component={authdetails.auth != null? authdetails.auth? MainHome : Login : Loading} options={{headerShown: false}} />
     </AuthStack.Navigator>
   )
