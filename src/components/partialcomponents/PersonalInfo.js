@@ -36,7 +36,7 @@ const PersonalInfo = ({navigation}) => {
         <TouchableOpacity style={{width: "100%", borderBottomColor: "#C1C1C1", borderBottomWidth: 1}}>
             <View style={{backgroundColor: "transparent", width: "100%", paddingLeft: 20, paddingRight: 20, height: 70, alignItems: "center", flexDirection: "row"}}>
                 <View style={{flex: 1}}>
-                    <Text style={{color: "#000000B2", fontSize: 12}}>UserID</Text>
+                    <Text style={{color: "#000000B2", fontSize: 12}}>Commuter ID</Text>
                     <Text style={{color: '#000000', fontSize: 15}}>{profiledetails.userID}</Text>
                 </View>
                 {/* <MIcons name='arrow-forward-ios' style={{fontSize: 20, color: "black"}} /> */}
