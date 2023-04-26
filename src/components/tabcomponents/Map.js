@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, ScrollView, Platform, ToastAndroid
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import MainMap from '../maincomponents/MainMap'
-import { SET_ASSIGNED_ROUTES_LIST, SET_BUS_STOPS_LIST, SET_ENABLE_LOCATION, SET_INITIAL_MAP_TRIGGER, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from '../../redux/types/types'
+import { SET_ANIMATE_TO_LOCATION_TRIGGER, SET_ASSIGNED_ROUTES_LIST, SET_BUS_STOPS_LIST, SET_ENABLE_LIVEMAP, SET_ENABLE_LOCATION, SET_INITIAL_MAP_TRIGGER, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from '../../redux/types/types'
 import Axios from 'axios'
 import { EXT_URL, URL } from '../../json/urlconfig'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -25,6 +25,8 @@ const Map = ({navigation}) => {
     const selectedbusstop = useSelector(state => state.selectedbusstop);
     const waitingbusstop = useSelector(state => state.waitingbusstop)
     const selectedlivebus = useSelector(state => state.selectedlivebus);
+    const enablelivemap = useSelector(state => state.enablelivemap);
+    const animatetolocationtrigger = useSelector(state => state.animatetolocationtrigger);
 
     const [toggleMapMenu, settoggleMapMenu] = useState(false)
 
@@ -326,6 +328,17 @@ const Map = ({navigation}) => {
 
     return (
      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+        {currentlocation.status? (
+            currentlocation.lat != "" && currentlocation.lng != ""? (
+                <TouchableOpacity onPress={() => { dispatch({ type: SET_ANIMATE_TO_LOCATION_TRIGGER, animatetolocationtrigger: !animatetolocationtrigger }) }} style={{backgroundColor: "white", zIndex: 1, position: "absolute", width: 55, height: 55, borderRadius: 55, top: 20, right: 20, elevation: 5, justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "#808080"}}>
+                    <MaterialIcons name='my-location' style={{color: "#404040", fontSize: 25}} />
+                </TouchableOpacity>
+            ) : (
+                <View style={{position: "absolute"}}></View>
+            )
+        ) : (
+            <View style={{position: "absolute"}}></View>
+        )}
         <View style={{backgroundColor: "white", position: "absolute", zIndex: 1, bottom: 90, width: "100%", maxWidth: 345, borderRadius: 10, flexDirection: "column", alignItems: "center", maxHeight: 300, height: toggleMapMenu? "100%" : 30, paddingBottom: 5}}>
             <TouchableOpacity onPress={() => { settoggleMapMenu(!toggleMapMenu) }} style={{height: 30, width: "100%", justifyContent: "center", alignItems: "center", flexDirection: "row", paddingLeft: 15, paddingRight: 15, borderBottomColor: "#808080", borderBottomWidth: toggleMapMenu? 1 : 0}}>
                 <Text style={{color: "black", fontSize: 15, fontWeight: "bold"}}>Menu</Text>
@@ -418,10 +431,13 @@ const Map = ({navigation}) => {
                             )}
                         </View>
                         <View style={{width: "30%"}}>
-                            <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 30}}>Location Sharing</Text>
+                            <Text style={{fontSize: 13, color: "black", marginBottom: 0, height: 30}}>Controls</Text>
                             <View style={{backgroundColor: "#D3D3D3", minHeight: 100, borderRadius: 10, justifyContent: "center", alignItems: "center"}}>
-                                <TouchableOpacity onPress={() => { dispatch({ type: SET_ENABLE_LOCATION, enablelocation: !enablelocation }) }} style={{backgroundColor: enablelocation? "red" : "green", width: 70, height: 30, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
-                                    <Text style={{color: "white", fontSize: 13}}>{enablelocation? "Disable" : "Enable"}</Text>
+                                <TouchableOpacity onPress={() => { dispatch({ type: SET_ENABLE_LOCATION, enablelocation: !enablelocation }) }} style={{backgroundColor: enablelocation? "red" : "green", width: 70, height: 35, borderRadius: 15, justifyContent: "center", alignItems: "center", marginBottom: 5}}>
+                                    <Text style={{color: "white", fontSize: 12}}>{enablelocation? "Location" : "Location"}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => { dispatch({ type: SET_ENABLE_LIVEMAP, enablelivemap: !enablelivemap }) }} style={{backgroundColor: enablelivemap? "red" : "green", width: 70, height: 35, borderRadius: 15, justifyContent: "center", alignItems: "center"}}>
+                                    <Text style={{color: "white", fontSize: 12}}>{enablelivemap? "Live Map" : "Live Map"}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>

@@ -191,6 +191,7 @@ const Routes = ({navigation}) => {
                                                 companyID: bss.companyID,
                                                 plateNumber: bss.plateNumber,
                                                 route: bss.routeName,
+                                                routeID: bss.routeID,
                                                 latitude: parseFloat(bss.latitude),
                                                 longitude: parseFloat(bss.longitude)
                                             }})

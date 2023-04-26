@@ -1,4 +1,4 @@
-import { SET_ASSIGNED_ROUTES_LIST, SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LOCATION, SET_FEED_INFO, SET_FEED_LIST, SET_INITIAL_MAP_TRIGGER, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SEARCH_RESULT_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from "../types/types";
+import { SET_ANIMATE_TO_LOCATION_TRIGGER, SET_ASSIGNED_ROUTES_LIST, SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_CURRENT_LOCATION, SET_CURRENT_TAB, SET_ENABLE_LIVEMAP, SET_ENABLE_LOCATION, SET_FEED_INFO, SET_FEED_LIST, SET_INITIAL_MAP_TRIGGER, SET_LIVE_BUST_LIST, SET_LIVE_ROUTE_LIST, SET_PROFILE_DETAILS, SET_ROUTES_LIST, SET_SEARCH_RESULT_LIST, SET_SELECTED_BUS_STOP, SET_SELECTED_LIVE_BUS, SET_SELECTED_ROUTE, SET_WAITING_BUS_STOP } from "../types/types";
 
 export const authdetailsstate = {
     auth: null,
@@ -236,6 +236,24 @@ export const setinitialmaptrigger = (state = "none", action) => {
     switch(action.type){
         case SET_INITIAL_MAP_TRIGGER:
             return action.initialmaptrigger;
+        default:
+            return state;
+    }
+}
+
+export const setenablelivemap = (state = false, action) => {
+    switch(action.type){
+        case SET_ENABLE_LIVEMAP:
+            return action.enablelivemap;
+        default:
+            return state;
+    }
+}
+
+export const setanimatetolocationtrigger = (state = false, action) => {
+    switch(action.type){
+        case SET_ANIMATE_TO_LOCATION_TRIGGER:
+            return action.animatetolocationtrigger;
         default:
             return state;
     }

@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import MapView, { Polygon, Polyline, Marker, Callout, Circle } from 'react-native-maps'
 import QCPath from '../../json/QCPath.json'
 import { locations } from '../../json/data'
@@ -25,8 +25,12 @@ const MainMap = () => {
   const selectedlivebus = useSelector(state => state.selectedlivebus);
   const assignedrouteslist = useSelector(state => state.assignedrouteslist)
   const initialmaptrigger = useSelector(state => state.initialmaptrigger);
+  const enablelivemap = useSelector(state => state.enablelivemap);
+  const animatetolocationtrigger = useSelector(state => state.animatetolocationtrigger);
 
   const livebuslist = useSelector(state => state.livebuslist)
+
+  const mapRef = useRef(null)
 
   const dispatch = useDispatch()
 
@@ -58,9 +62,23 @@ const MainMap = () => {
         return `#${randColor.toUpperCase()}`
     }
 
+    useEffect(() => {
+        if(currentlocation.status){
+            if(currentlocation.lat != "" && currentlocation.lng != ""){
+                mapRef.current.animateToRegion({
+                    latitude: parseFloat(currentlocation.lat),
+                    longitude: parseFloat(currentlocation.lng),
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  });
+            }
+        }
+    },[animatetolocationtrigger])
+
   return (
     <View style={mainstyles.mainview}>
         <MapView
+            ref={mapRef}
             onRegionChange={function(){return;}}
             style={mainstyles.map}
             initialRegion={initialmaptrigger == "none"? {
@@ -114,7 +132,9 @@ const MainMap = () => {
             }
             }
             minZoomLevel={12}
-            mapType={'satellite'}
+            mapType={
+                enablelivemap? "hybrid" : "satellite"
+            }
         >
             {busStopsList.length == 0? null : (
                 busStopsList.map((stops, i) => {

@@ -7,7 +7,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 const FeedIndvUpdate = ({fd}) => {
   return (
     <View style={{backgroundColor: "white", width: "100%", height: 150, elevation: 0, borderColor: "#E2E5DE", borderWidth: 1, borderRadius: 10, flexDirection: "row"}}>
-      <View style={{backgroundColor: "transparent", height: "100%", width: 135, justifyContent: "center", alignItems: "center"}}>
+      <View style={{backgroundColor: "black", height: "100%", width: 135, justifyContent: "center", alignItems: "center", borderTopLeftRadius: 10, borderBottomLeftRadius: 10}}>
         <Image source={{uri: fd.preview}} style={{width: "100%", height: "100%", borderTopLeftRadius: 10, borderBottomLeftRadius: 10}}/>
       </View>
       <View style={{backgroundColor: "transparent", flex: 1, flexDirection: "column", paddingTop: 10, paddingBottom: 10, paddingLeft: 5, paddingRight: 5}}>
