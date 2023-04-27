@@ -116,6 +116,11 @@ const Search = ({navigation}) => {
         }
     }
 
+    function isInt(n) {
+        // console.log(n % 1 === 0)
+        return n % 1 === 0;
+    }
+
     return (
      <View style={{flex: 1, justifyContent: "flex-start", alignItems: "center", backgroundColor: "white", flexDirection: "column"}}>
         <View style={{height: 180, backgroundColor: "#2B4273", width: "100%", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, justifyContent: "flex-end", alignItems: "center"}}>
@@ -189,8 +194,9 @@ const Search = ({navigation}) => {
                                         {searchresultlist.Routes.map((data, i) => {
                                             return(
                                                 <TouchableOpacity onLongPress={() => { navigation.navigate("RouteInfo", { id: data.routeID }) }} onPress={() => { selectRoute(data) }} key={data.routeID} style={{width: "100%", backgroundColor: 'transparent', borderWidth: 1, borderColor: "#808080", height: 65, borderRadius: 10, flexDirection: "column", justifyContent: "center", paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
-                                                    <View style={{width: "100%"}}>
+                                                    <View style={{width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                                                         <Text style={{color: "#808080", fontSize: 13}}>{data.routeID}</Text>
+                                                        <Text style={{color: "#808080", fontSize: 13}}>Vice Versa</Text>
                                                     </View>
                                                     <View style={{width: "100%", flexDirection: "row", alignItems: 'center'}}>
                                                         <Text style={{color: "#404040", fontSize: 15, fontWeight: "bold", width: 120}} numberOfLines={2}>{data.routeName}</Text>
@@ -201,7 +207,7 @@ const Search = ({navigation}) => {
                                                             </View>
                                                             <View style={{flexDirection: "row", justifyContent: "flex-end", width: 170, paddingRight: 0}}>
                                                                 <Text style={{color: "#808080", fontSize: 13}}>to </Text>
-                                                                <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}} numberOfLines={1}>{data.stationList[data.stationList.length - 1].stationName}</Text>
+                                                                <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold"}} numberOfLines={1}>{data.stationList[isInt(data?.stationList.length/2)? (data?.stationList.length/2 - 1) : Math.round(data?.stationList.length/2 + 2)].stationName}</Text>
                                                             </View>
                                                         </View>
                                                     </View>

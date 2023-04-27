@@ -326,6 +326,11 @@ const Map = ({navigation}) => {
         }
     },[selectedlivebus])
 
+    function isInt(n) {
+        // console.log(n % 1 === 0)
+        return n % 1 === 0;
+    }
+
     return (
      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
         {currentlocation.status? (
@@ -527,7 +532,7 @@ const Map = ({navigation}) => {
                                 <View style={{width: "100%", flexDirection: "row"}}>
                                     <View style={{backgroundColor: "transparent", flexDirection: "column", justifyContent: "center", paddingTop: 10}}>
                                         <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold", maxWidth: 200}} numberOfLines={1}>{selectedroute.stationList[0].stationName}</Text>
-                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold", maxWidth: 200}} numberOfLines={1}>{selectedroute.stationList[selectedroute.stationList.length - 1].stationName}</Text>
+                                        <Text style={{color: "#404040", fontSize: 13, fontWeight: "bold", maxWidth: 200}} numberOfLines={1}>{selectedroute.stationList[isInt(selectedroute?.stationList.length/2)? (selectedroute?.stationList.length/2 - 1) : Math.round(selectedroute?.stationList.length/2 + 2)].stationName}</Text>
                                     </View>
                                     <View style={{justifyContent: "center", alignItems: "flex-end", flex: 1, paddingTop: 5}}>
                                         <MaterialComIcons name='directions-fork' style={{fontSize: 25, color: "#404040"}} />
