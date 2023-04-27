@@ -6,7 +6,7 @@ import citylayout from '../../resources/citylayout.png'
 const Loading = () => {
   return (
     <ImageBackground source={citylayout} style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-      <Image source={carimg} style={styles.carimgstyle} />
+      <Image resizeMode='contain' source={carimg} style={styles.carimgstyle} />
       <Text style={{color: "white", fontWeight: "bold", fontSize: 25}}>Bus Track</Text>
       <Text style={{color: "#d9d9d9", fontWeight: "normal", fontSize: 13}}>KASAMA KA SA PAG-UNLAD</Text>
       <Text style={{color: "#d9d9d9", position: "absolute", bottom: 100, fontSize: 13}}>loading...</Text>

@@ -8,11 +8,13 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { useDispatch } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { SET_AUTH_DETAILS } from '../../redux/types/types'
+import EntypeIcon from 'react-native-vector-icons/Entypo'
 
 const Login = ({navigation}) => {
 
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [showpassword, setshowpassword] = useState(false)
 
   const [loggingIn, setloggingIn] = useState(false)
 
@@ -79,7 +81,12 @@ const Login = ({navigation}) => {
             <View style={styles.viewmainform}>
               <Text style={{...styles.text, ...styles.loginlabel}}>Log In</Text>
               <TextInput placeholder='Email' style={styles.textinput} placeholderTextColor="#808080" value={email} onChangeText={(e) => { setemail(e) }} />
-              <TextInput secureTextEntry={true} placeholder='Password' style={styles.textinput} placeholderTextColor="#808080" value={password} onChangeText={(e) => { setpassword(e) }} />
+              <View style={styles.textinputpassword}>
+                <TextInput onSubmitEditing={() => { loginRequest() }} secureTextEntry={!showpassword} placeholder='Password' style={{flex: 1, height: "100%"}} placeholderTextColor="#808080" value={password} onChangeText={(e) => { setpassword(e) }} />
+                <TouchableOpacity onPress={() => { setshowpassword(!showpassword) }} style={{height: "100%", backgroundColor: "transparent", width: 50, justifyContent: "center", alignItems: "center"}}>
+                  <EntypeIcon name={showpassword? 'eye' : 'eye-with-line'} style={{fontSize: 20, color: "#404040"}} />
+                </TouchableOpacity>
+              </View>
               {loggingIn? (
                 <View style={styles.loginginlabel}>
                   <Text>logging in...</Text>
@@ -146,6 +153,9 @@ const styles = StyleSheet.create({
     height: 120,
     top: 180,
     left: 20,
+    borderWidth: 1,
+    borderColor: "#dbdbdb",
+    borderRadius: 120
   },
   viewmainform:{
     backgroundColor: "white",
@@ -180,6 +190,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "black",
     marginBottom: 15,
+    display: "flex",
+    flexDirection: "row"
+    // textAlign: "center"
+  },
+  textinputpassword:{
+    backgroundColor: "#2B427321",
+    width: "90%",
+    maxWidth: 350,
+    borderRadius: 15,
+    height: 50,
+    paddingLeft: 20,
+    paddingRight: 0,
+    fontSize: 15,
+    color: "black",
+    marginBottom: 15,
+    display: "flex",
+    flexDirection: "row"
     // textAlign: "center"
   },
   loginbtn:{
