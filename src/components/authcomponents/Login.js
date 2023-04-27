@@ -80,7 +80,7 @@ const Login = ({navigation}) => {
           <View style={styles.viewform}>
             <View style={styles.viewmainform}>
               <Text style={{...styles.text, ...styles.loginlabel}}>Log In</Text>
-              <TextInput placeholder='Email' style={styles.textinput} placeholderTextColor="#808080" value={email} onChangeText={(e) => { setemail(e) }} />
+              <TextInput placeholder='Email or Contact Number' style={styles.textinput} placeholderTextColor="#808080" value={email} onChangeText={(e) => { setemail(e) }} />
               <View style={styles.textinputpassword}>
                 <TextInput onSubmitEditing={() => { loginRequest() }} secureTextEntry={!showpassword} placeholder='Password' style={{flex: 1, height: "100%"}} placeholderTextColor="#808080" value={password} onChangeText={(e) => { setpassword(e) }} />
                 <TouchableOpacity onPress={() => { setshowpassword(!showpassword) }} style={{height: "100%", backgroundColor: "transparent", width: 50, justifyContent: "center", alignItems: "center"}}>
